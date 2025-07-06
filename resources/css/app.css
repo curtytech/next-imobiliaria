@@ -9,3 +9,43 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
+
+/* Custom Styles Centralized */
+.glassmorphism {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.text-primary { color: #B91C1C !important; }
+.bg-primary { background-color: #B91C1C !important; }
+.hover\:bg-primary-dark:hover { background-color: #991B1B !important; }
+.border-primary { border-color: #B91C1C !important; }
+.focus\:ring-primary:focus { --tw-ring-color: #B91C1C; }
+
+.glide__arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+.glide__arrow:hover {
+    background: #B91C1C;
+    color: white;
+    border-color: #B91C1C;
+}
+.glide__arrow--left { left: -20px; }
+.glide__arrow--right { right: -20px; }
+@media (max-width: 1024px) {
+    .glide__arrow--left { left: 10px; }
+    .glide__arrow--right { right: 10px; }
+}
