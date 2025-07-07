@@ -2,22 +2,6 @@
 
 @section('content')
 <div class="min-h-screen bg-gray-50">
-    <!-- Header -->
-    <header class="sticky top-0 z-40 bg-white shadow-sm">
-        <div class="container flex justify-between items-center px-4 py-4 mx-auto">
-            <div class="flex items-center space-x-2">
-                <span class="flex justify-center items-center w-10 h-10 text-2xl font-bold text-white rounded-md bg-primary">BR</span>
-                <span class="text-xl font-bold text-gray-800">Bruna Rocha</span>
-            </div>
-            <div class="flex items-center space-x-4">
-                <button class="px-4 py-2 font-semibold text-white rounded-lg bg-primary">Anuncie seu imóvel</button>
-                <button class="p-2 text-gray-700 bg-gray-100 rounded-full">
-                    <i data-lucide="user" class="w-6 h-6"></i>
-                </button>
-            </div>
-        </div>
-    </header>
-
     <div class="container flex flex-col gap-8 px-4 py-8 mx-auto lg:flex-row">
         <!-- Sidebar Filters -->
         <aside class="p-6 mb-8 w-full bg-white rounded-xl shadow lg:w-64 lg:mb-0">
@@ -129,43 +113,43 @@
             </div>
         </main>
     </div>
-
-    <!-- Footer -->
-    <footer class="mt-16 text-white bg-gray-800">
-        <div class="container grid grid-cols-1 gap-8 px-4 py-12 mx-auto md:grid-cols-4">
-            <div>
-                <div class="flex items-center mb-4 space-x-2">
-                    <span class="flex justify-center items-center w-10 h-10 text-2xl font-bold text-white rounded-md bg-primary">BR</span>
-                    <span class="text-xl font-bold">Bruna Rocha</span>
-                </div>
-                <p class="text-sm text-gray-400">Especializada em venda e locação de imóveis residenciais e comerciais na cidade de Magé e região.</p>
-            </div>
-            <div>
-                <h5 class="mb-4 font-semibold">Empresa</h5>
-                <ul class="space-y-2 text-sm text-gray-400">
-                    <li><a href="#">Sobre</a></li>
-                    <li><a href="#">Contato</a></li>
-                </ul>
-            </div>
-            <div>
-                <h5 class="mb-4 font-semibold">Serviços</h5>
-                <ul class="space-y-2 text-sm text-gray-400">
-                    <li><a href="#">Venda</a></li>
-                    <li><a href="#">Locação</a></li>
-                </ul>
-            </div>
-            <div>
-                <h5 class="mb-4 font-semibold">Imóveis</h5>
-                <ul class="space-y-2 text-sm text-gray-400">
-                    <li><a href="#">Casas</a></li>
-                    <li><a href="#">Apartamentos</a></li>
-                    <li><a href="#">Terrenos</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="py-6 text-xs text-center text-gray-400 border-t border-gray-700">
-            &copy; 2024 Bruna Rocha Imóveis. Todos os direitos reservados. Feito com <span class="text-primary">♥</span> por Imobzi
-        </div>
-    </footer>
 </div>
+
+<!-- Footer -->
+<footer class="mt-16 text-white bg-gray-800">
+    <div class="container grid grid-cols-1 gap-8 px-4 py-12 mx-auto md:grid-cols-4">
+        <div>
+            <div class="flex items-center mb-4 space-x-2">
+                <span class="flex justify-center items-center w-10 h-10 text-2xl font-bold text-white rounded-md bg-primary">BR</span>
+                <span class="text-xl font-bold">Bruna Rocha</span>
+            </div>
+            <p class="text-sm text-gray-400">Especializada em venda e locação de imóveis residenciais e comerciais na cidade de Magé e região.</p>
+        </div>
+        <div>
+            <h5 class="mb-4 font-semibold">Empresa</h5>
+            <ul class="space-y-2 text-sm text-gray-400">
+                <li><a href="#">Sobre</a></li>
+                <li><a href="#">Contato</a></li>
+            </ul>
+        </div>
+        <div>
+            <h5 class="mb-4 font-semibold">Serviços</h5>
+            <ul class="space-y-2 text-sm text-gray-400">
+                <li><a href="#">Venda</a></li>
+                <li><a href="#">Locação</a></li>
+            </ul>
+        </div>
+        <div>
+            <h5 class="mb-4 font-semibold">Imóveis</h5>
+            <ul class="space-y-2 text-sm text-gray-400">
+                <li><a href="#">Casas</a></li>
+                <li><a href="#">Apartamentos</a></li>
+                <li><a href="#">Terrenos</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="py-6 text-xs text-center text-gray-400 border-t border-gray-700">
+        &copy; 2024 Bruna Rocha Imóveis. Todos os direitos reservados. Feito com <span class="text-primary">♥</span> por Imobzi
+    </div>
+</footer>
 @endsection
