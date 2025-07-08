@@ -28,6 +28,9 @@ class Imovel extends Model
         'fotos',
         'videos',
         'destaque',
+        'area_util',
+        'terreno',
+        'area_constr',
     ];
 
     protected $casts = [
