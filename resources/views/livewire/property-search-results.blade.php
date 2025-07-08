@@ -1,6 +1,3 @@
-@extends('layouts.site')
-
-@section('content')
 <div class="min-h-screen bg-gray-50">
     <!-- Header -->
     <header class="sticky top-0 z-40 bg-white shadow-sm">
@@ -168,4 +165,3 @@
         </div>
     </footer>
 </div>
-@endsection
