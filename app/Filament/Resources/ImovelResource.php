@@ -59,8 +59,19 @@ class ImovelResource extends Resource
                             ->options([
                                 'casa' => 'Casa',
                                 'apartamento' => 'Apartamento',
-                                'terreno' => 'Terreno',
+                                'apartamento_duplex' => 'Apartamento Duplex',
+                                'chale' => 'Chalé',
+                                'kitnet' => 'Kitnet',
+                                'sobrado' => 'Sobrado',
                                 'comercial' => 'Comercial',
+                                'loja' => 'Loja',
+                                'galpao' => 'Galpão',
+                                'pousada' => 'Pousada',
+                                'predio' => 'Prédio',
+                                'sala' => 'Sala',
+                                'terreno' => 'Terreno',
+                                'sitio' => 'Sítio',
+                                'lote' => 'Lote',
                             ])
                             ->required(),
 
@@ -221,22 +232,7 @@ class ImovelResource extends Resource
                 TextColumn::make('area')
                     ->label('Área')
                     ->suffix(' m²')
-                    ->sortable(),
-
-                TextColumn::make('area_util')
-                    ->label('Área útil')
-                    ->suffix(' m²')
-                    ->sortable(),
-
-                TextColumn::make('terreno')
-                    ->label('Terreno')
-                    ->suffix(' m²')
-                    ->sortable(),
-
-                TextColumn::make('area_constr')
-                    ->label('Área constr.')
-                    ->suffix(' m²')
-                    ->sortable(),
+                    ->sortable(),              
 
                 TextColumn::make('cidade')
                     ->label('Cidade')
@@ -255,11 +251,11 @@ class ImovelResource extends Resource
                 ToggleColumn::make('destaque')
                     ->label('Destaque'),
 
-                TextColumn::make('videos')
-                    ->label('Vídeos')
-                    ->formatStateUsing(fn($state) => $state ? count($state) . ' vídeo(s)' : 'Nenhum')
-                    ->badge()
-                    ->color(fn($state) => $state && count($state) > 0 ? 'success' : 'gray'),
+                // TextColumn::make('videos')
+                //     ->label('Vídeos')
+                //     ->formatStateUsing(fn($state) => $state ? count($state) . ' vídeo(s)' : 'Nenhum')
+                //     ->badge()
+                //     ->color(fn($state) => $state && count($state) > 0 ? 'success' : 'gray'),
 
                 TextColumn::make('created_at')
                     ->label('Criado em')
