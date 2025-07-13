@@ -1,0 +1,133 @@
+<?php
+
+use function Livewire\Volt\{state};
+
+state([
+    'location' => '',
+    'propertyType' => '',
+    'priceMin' => '',
+    'priceMax' => '',
+    'areaMin' => '',
+    'areaMax' => '',
+    'bedrooms' => '',
+    'viewMode' => 'grid',
+    'sortBy' => 'recent',
+    'propertiesFound' => 17
+]);
+
+$filter = function() {
+    // Filter logic would go here
+    $this->propertiesFound = 17; // This would be calculated based on filters
+};
+
+$setViewMode = function($mode) {
+    $this->viewMode = $mode;
+};
+
+$setSortBy = function($sort) {
+    $this->sortBy = $sort;
+};
+
+?>
+
+<main>
+    <div class="min-h-screen bg-gray-50">
+        <div class="container flex flex-col gap-8 px-4 py-8 mx-auto lg:flex-row">
+            <!-- Sidebar Filters -->
+            <aside class="p-6 mb-8 w-full bg-white rounded-xl shadow lg:w-64 lg:mb-0">
+                <h2 class="mb-4 text-lg font-bold">Filtrar</h2>
+                <form wire:submit.prevent="filter" class="space-y-6">
+                    <div>
+                        <label class="block mb-2 text-sm font-semibold">Cidade ou bairro</label>
+                        <input type="text" wire:model.live="location" class="px-4 py-2 w-full bg-gray-50 rounded-lg border-gray-200"
+                            placeholder="Ex: Magé, Centro">
+                    </div>
+                    <div>
+                        <label class="block mb-2 text-sm font-semibold">Tipo do imóvel</label>
+                        <select wire:model.live="propertyType" class="px-4 py-2 w-full bg-gray-50 rounded-lg border-gray-200">
+                            <option value="">Todos</option>
+                            <option value="casa">Casa</option>
+                            <option value="apartamento">Apartamento</option>
+                            <option value="terreno">Terreno</option>
+                            <option value="comercial">Comercial</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block mb-2 text-sm font-semibold">Faixa de preço</label>
+                        <div class="flex items-center space-x-2">
+                            <input type="number" wire:model.live="priceMin" class="px-2 py-1 w-1/2 bg-gray-50 rounded-lg border-gray-200"
+                                placeholder="Mín">
+                            <span>-</span>
+                            <input type="number" wire:model.live="priceMax" class="px-2 py-1 w-1/2 bg-gray-50 rounded-lg border-gray-200"
+                                placeholder="Máx">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block mb-2 text-sm font-semibold">Área útil (m²)</label>
+                        <div class="flex items-center space-x-2">
+                            <input type="number" wire:model.live="areaMin" class="px-2 py-1 w-1/2 bg-gray-50 rounded-lg border-gray-200"
+                                placeholder="Mín">
+                            <span>-</span>
+                            <input type="number" wire:model.live="areaMax" class="px-2 py-1 w-1/2 bg-gray-50 rounded-lg border-gray-200"
+                                placeholder="Máx">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block mb-2 text-sm font-semibold">Quartos</label>
+                        <select wire:model.live="bedrooms" class="px-4 py-2 w-full bg-gray-50 rounded-lg border-gray-200">
+                            <option value="">Qualquer</option>
+                            <option value="1">1+</option>
+                            <option value="2">2+</option>
+                            <option value="3">3+</option>
+                            <option value="4">4+</option>
+                        </select>
+                    </div>
+                    <button type="submit"
+                        class="py-2 mt-4 w-full font-semibold text-white rounded-lg bg-primary">Filtrar</button>
+                </form>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="flex-1">
+                <div class="flex flex-col gap-4 mb-6 md:flex-row md:items-center md:justify-between">
+                    <div class="text-sm text-gray-700">{{ $propertiesFound }} imóveis encontrados</div>
+                    <div class="flex gap-2 items-center">
+                        <span class="text-sm text-gray-500">Exibir:</span>
+                        <button wire:click="setViewMode('grid')" class="p-2 rounded hover:bg-gray-200 {{ $viewMode === 'grid' ? 'bg-gray-200' : '' }}" title="Grade">
+                            <i data-lucide="grid" class="w-5 h-5"></i>
+                        </button>
+                        <button wire:click="setViewMode('list')" class="p-2 rounded hover:bg-gray-200 {{ $viewMode === 'list' ? 'bg-gray-200' : '' }}" title="Lista">
+                            <i data-lucide="list" class="w-5 h-5"></i>
+                        </button>
+                        <span class="ml-4 text-sm text-gray-500">Ordenar por:</span>
+                        <select wire:model.live="sortBy" class="px-2 py-1 text-sm bg-gray-50 rounded border-gray-200">
+                            <option value="recent">Mais recentes</option>
+                            <option value="price_asc">Menor preço</option>
+                            <option value="price_desc">Maior preço</option>
+                        </select>
+                    </div>
+                </div>
+                <!-- Property Cards Grid -->
+                <div class="grid grid-cols-1 gap-6 {{ $viewMode === 'grid' ? 'sm:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1' }}">
+                    @for ($i = 0; $i < 12; $i++)
+                        @livewire('imovel-card')
+                    @endfor
+                </div>
+                <!-- Pagination -->
+                <div class="flex justify-center mt-8">
+                    <nav class="inline-flex -space-x-px">
+                        <a href="#"
+                            class="px-3 py-2 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100">&laquo;</a>
+                        <a href="#" class="px-3 py-2 font-bold bg-white border border-gray-300 text-primary">1</a>
+                        <a href="#"
+                            class="px-3 py-2 text-gray-700 bg-white border border-gray-300 hover:bg-gray-100">2</a>
+                        <a href="#"
+                            class="px-3 py-2 text-gray-700 bg-white border border-gray-300 hover:bg-gray-100">3</a>
+                        <a href="#"
+                            class="px-3 py-2 text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100">&raquo;</a>
+                    </nav>
+                </div>
+            </main>
+        </div>
+    </div>
+</main> 
