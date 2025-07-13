@@ -1,0 +1,12 @@
+---
+alwaysApply: true
+---
+# General Code Rules
+
+## Tech Preferences
+
+- Use **Bun** for package management and running scripts
+- Use **Tailwind CSS** for styling
+- Use **Livewire** to build interactive components and reusable UI elements and manage state
+- Use **Alpine.js** for small JavaScript interactions
+- Use **Blade Icons - Lucide** for icons. Ex: `<x-lucide-bath />`
