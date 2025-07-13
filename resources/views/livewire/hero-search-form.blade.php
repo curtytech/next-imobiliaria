@@ -24,7 +24,7 @@
         <div class="md:col-span-2 lg:col-span-2">
             <label for="search-location" class="sr-only">Localização</label>
             <div class="relative">
-                <i data-lucide="map-pin" class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500"></i>
+                <x-lucide-map-pin class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
                 <input type="text" id="search-location" wire:model="location"
                     placeholder="Digite o bairro, condomínio ou cidade..."
                     class="w-full pl-12 pr-4 py-3 rounded-lg text-gray-800 bg-white focus:outline-none focus:ring-2 focus:ring-primary">
@@ -32,13 +32,13 @@
         </div>
         <button type="submit"
             class="w-full bg-primary text-white font-bold py-3 rounded-lg hover:bg-primary-dark transition shadow-lg flex items-center justify-center space-x-2">
-            <i data-lucide="search" class="w-5 h-5"></i>
+            <x-lucide-search class="w-5 h-5" />
             <span>Buscar</span>
         </button>
     </form>
 </div>
 <script>
-    document.addEventListener('livewire:load', function () {
+    document.addEventListener('livewire:load', function() {
         if (window.lucide) {
             window.lucide.createIcons();
         }
