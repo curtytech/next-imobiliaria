@@ -77,7 +77,7 @@ class Imovel extends Model
         })->filter()->toArray();
     }
 
-    private function extractYouTubeId($url)
+    public function extractYouTubeId($url)
     {
         $patterns = [
             '/youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)/',
