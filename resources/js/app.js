@@ -1,5 +1,9 @@
 import "./bootstrap";
 import Glide from "glidejs";
+import { createIcons } from "lucide";
+
+// Initialize Lucide icons
+createIcons();
 
 // Helper to initialize Glide carousels
 window.initGlide = (selector, options = {}) => {
