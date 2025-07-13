@@ -12,7 +12,7 @@
                 <h1 class="mb-4 text-4xl font-extrabold drop-shadow-lg md:text-6xl">O seu imóvel dos sonhos em Magé</h1>
                 <p class="mx-auto mb-8 max-w-3xl text-lg drop-shadow-md md:text-xl">Especializado em venda e locação de
                     imóveis residenciais e comerciais na cidade de Magé.</p>
-                @livewire('hero-search-form')
+                <livewire:hero-search-form />
             </div>
         </section>
         <!-- Feature Highlights Section -->
