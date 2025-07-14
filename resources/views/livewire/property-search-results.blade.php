@@ -3,8 +3,8 @@
     <header class="sticky top-0 z-40 bg-white shadow-sm">
         <div class="container flex justify-between items-center px-4 py-4 mx-auto">
             <div class="flex items-center space-x-2">
-                <span class="flex justify-center items-center w-10 h-10 text-2xl font-bold text-white rounded-md bg-primary">BR</span>
-                <span class="text-xl font-bold text-gray-800">Bruna Rocha</span>
+                <span class="flex justify-center items-center w-10 h-10 text-2xl font-bold text-white rounded-md bg-primary">NX</span>
+                <span class="text-xl font-bold text-gray-800">Next Imobiliária</span>
             </div>
             <div class="flex items-center space-x-4">
                 <button class="px-4 py-2 font-semibold text-white rounded-lg bg-primary">Anuncie seu imóvel</button>
@@ -103,13 +103,13 @@
                             <span class="flex gap-1 items-center"><i data-lucide="ruler" class="w-4 h-4"></i> 80m²</span>
                         </div>
                         <div class="flex gap-2 mt-auto">
-                            <button class="flex-1 py-2 font-semibold rounded-lg border transition border-primary text-primary hover:bg-primary hover:text-white">Ver detalhes</button>
+                            <a href="{{ url('/imovel/1') }}" class="flex-1 py-2 font-semibold rounded-lg border transition border-primary text-primary hover:bg-primary hover:text-white text-center">Ver detalhes</a>
                             <button class="flex-1 py-2 font-semibold rounded-lg border transition border-primary text-primary hover:bg-primary hover:text-white">Contato</button>
                         </div>
                     </div>
                     <div class="flex items-center p-4 border-t border-gray-100">
-                        <img src="https://placehold.co/32x32/EFEFEF/777777?text=BR" alt="Corretor" class="mr-2 w-8 h-8 rounded-full">
-                        <span class="text-xs text-gray-700">Bruna Rocha</span>
+                        <img src="https://placehold.co/32x32/EFEFEF/777777?text=NX" alt="Corretor" class="mr-2 w-8 h-8 rounded-full">
+                        <span class="text-xs text-gray-700">Next Imobiliária</span>
                     </div>
                 </div>
                 @endfor
@@ -132,8 +132,8 @@
         <div class="container grid grid-cols-1 gap-8 px-4 py-12 mx-auto md:grid-cols-4">
             <div>
                 <div class="flex items-center mb-4 space-x-2">
-                    <span class="flex justify-center items-center w-10 h-10 text-2xl font-bold text-white rounded-md bg-primary">BR</span>
-                    <span class="text-xl font-bold">Bruna Rocha</span>
+                    <span class="flex justify-center items-center w-10 h-10 text-2xl font-bold text-white rounded-md bg-primary">NX</span>
+                    <span class="text-xl font-bold">Next Imobiliária</span>
                 </div>
                 <p class="text-sm text-gray-400">Especializada em venda e locação de imóveis residenciais e comerciais na cidade de Magé e região.</p>
             </div>
@@ -161,7 +161,7 @@
             </div>
         </div>
         <div class="py-6 text-xs text-center text-gray-400 border-t border-gray-700">
-            &copy; 2024 Bruna Rocha Imóveis. Todos os direitos reservados. Feito com <span class="text-primary">♥</span> por Imobzi
+            &copy; 2024 Next Imobiliária. Todos os direitos reservados. Feito com <span class="text-primary">♥</span> por Imobzi
         </div>
     </footer>
 </div>
