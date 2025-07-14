@@ -17,11 +17,10 @@ class HeroSearchForm extends Component
 
     public function search()
     {
-        // Redirect to the results page with query parameters
-        return redirect()->route('properties.search', [
-            'tipo' => $this->propertyType,
-            'categoria' => $this->propertyKind,
-            'localizacao' => $this->location,
+        // Redirect to the search page with query parameters
+        return redirect()->route('search', [
+            'location' => $this->location,
+            'propertyType' => $this->propertyKind,
         ]);
     }
 

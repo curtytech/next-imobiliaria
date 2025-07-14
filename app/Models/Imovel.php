@@ -28,6 +28,9 @@ class Imovel extends Model
         'fotos',
         'videos',
         'destaque',
+        'area_util',
+        'terreno',
+        'area_constr',
     ];
 
     protected $casts = [
@@ -74,7 +77,7 @@ class Imovel extends Model
         })->filter()->toArray();
     }
 
-    private function extractYouTubeId($url)
+    public function extractYouTubeId($url)
     {
         $patterns = [
             '/youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)/',

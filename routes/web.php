@@ -2,12 +2,14 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Livewire\PropertySearchResults;
+<<<<<<< HEAD
 use App\Models\Imovel;
+=======
+use Livewire\Volt\Volt;
+>>>>>>> 3c2e1a678777de713fec34f0a2e935415ee5faed
 
-Route::get('/', function () {
-    return view('welcome');
-});
 
+<<<<<<< HEAD
 Route::get('/search', PropertySearchResults::class)->name('properties.search');
 
 Route::get('/imovel/{id}', function ($id) {
@@ -39,3 +41,13 @@ Route::get('/imovel/{id}', function ($id) {
     ];
     return view('imovel.detalhes', compact('imovel'));
 });
+=======
+// Route::get('/', Volt::route('/', 'welcome'));
+Volt::route('/', 'welcome')->name('welcome');
+
+// Route::get('/search', PropertySearchResults::class)->name('properties.search');
+Volt::route('/search', 'search')->name('search');
+
+// Property detail route
+Volt::route('/imovel/{id}', 'imovel-show')->name('imovel.show');
+>>>>>>> 3c2e1a678777de713fec34f0a2e935415ee5faed
