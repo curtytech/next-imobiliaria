@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Livewire\PropertySearchResults;
+use Livewire\Volt\Volt;
 
 // Route::get('/', Volt::route('/', 'welcome'));
 Volt::route('/', 'welcome')->name('welcome');
