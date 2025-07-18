@@ -5,6 +5,8 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Imovel;
+use App\Models\TipoImovel;
+use App\Models\StatusImovel;
 
 class ImovelSeeder extends Seeder
 {
@@ -252,7 +254,37 @@ class ImovelSeeder extends Seeder
         ];
 
         foreach ($imoveis as $imovel) {
-            Imovel::create($imovel);
+            $tipo = TipoImovel::where('nome', ucfirst($imovel['tipo']))->first();
+            $status = StatusImovel::whereRaw('LOWER(nome) = ?', [strtolower($imovel['status'])])->first();
+            if (!$status) {
+                $status = StatusImovel::first();
+            }
+            Imovel::create([
+                'titulo' => $imovel['titulo'],
+                'descricao' => $imovel['descricao'],
+                'tipo_id' => $tipo ? $tipo->id : null,
+                'status_id' => $status ? $status->id : null,
+                'preco' => $imovel['preco'],
+                'preco_iptu' => $imovel['preco_iptu'] ?? null,
+                'preco_condominio' => $imovel['preco_condominio'] ?? null,
+                'area' => $imovel['area'],
+                'quartos' => $imovel['quartos'],
+                'banheiros' => $imovel['banheiros'],
+                'vagas_garagem' => $imovel['vagas_garagem'],
+                'endereco' => $imovel['endereco'],
+                'bairro' => $imovel['bairro'],
+                'cidade' => $imovel['cidade'],
+                'estado' => $imovel['estado'],
+                'cep' => $imovel['cep'],
+                'caracteristicas' => $imovel['caracteristicas'],
+                'fotos' => $imovel['fotos'],
+                'videos' => $imovel['videos'] ?? [],
+                'destaque' => $imovel['destaque'],
+                'localizacao_maps' => $imovel['localizacao_maps'] ?? null,
+                'area_util' => $imovel['area_util'] ?? null,
+                'terreno' => $imovel['terreno'] ?? null,
+                'area_constr' => $imovel['area_constr'] ?? null,
+            ]);
         }
     }
 }

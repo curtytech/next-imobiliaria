@@ -9,11 +9,13 @@ class Imovel extends Model
 {
     use HasFactory;
 
+    protected $table = 'imoveis';
+
     protected $fillable = [
         'titulo',
         'descricao',
-        'tipo',
-        'status',
+        'tipo_id',
+        'status_id',
         'preco',
         'area',
         'quartos',
@@ -41,6 +43,16 @@ class Imovel extends Model
         'destaque' => 'boolean',
     ];
 
+    public function tipo()
+    {
+        return $this->belongsTo(TipoImovel::class, 'tipo_id');
+    }
+
+    public function statusImovel()
+    {
+        return $this->belongsTo(StatusImovel::class, 'status_id');
+    }
+
     public function getPrecoFormatadoAttribute()
     {
         return 'R$ ' . number_format($this->preco, 2, ',', '.');
@@ -61,9 +73,9 @@ class Imovel extends Model
         return $query->where('destaque', true);
     }
 
-    public function scopePorTipo($query, $tipo)
+    public function scopePorTipo($query, $tipoId)
     {
-        return $query->where('tipo', $tipo);
+        return $query->where('tipo_id', $tipoId);
     }
 
     public function getVideoIdsAttribute()

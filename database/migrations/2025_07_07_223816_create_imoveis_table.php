@@ -11,13 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('imovels', function (Blueprint $table) {
+        Schema::create('imoveis', function (Blueprint $table) {
             $table->id();
             $table->string('titulo');
             $table->text('descricao');
-            $table->string('tipo'); // casa, apartamento, terreno, comercial
-            $table->string('status')->default('disponivel'); // disponivel, vendido, alugado
+            $table->foreignId('tipo_id')->constrained('tipos_imoveis');
+            $table->foreignId('status_id')->constrained('status_imovels')->default(1);
             $table->decimal('preco', 12, 2);
+            $table->decimal('preco_iptu', 12, 2)->nullable();
+            $table->decimal('preco_condominio', 12, 2)->nullable();
             $table->integer('area');
             $table->integer('quartos')->nullable();
             $table->integer('banheiros')->nullable();
@@ -30,7 +32,11 @@ return new class extends Migration
             $table->json('caracteristicas')->nullable(); // características extras
             $table->json('fotos')->nullable(); // URLs das fotos
             $table->json('videos')->nullable(); // URLs dos vídeos do YouTube
-            $table->boolean('destaque')->default(false);
+            $table->boolean('destaque')->default(false);            
+            $table->string('localizacao_maps')->nullable();
+            $table->decimal('area_util', 8, 2)->nullable();
+            $table->decimal('terreno', 8, 2)->nullable();
+            $table->decimal('area_constr', 8, 2)->nullable();
             $table->timestamps();
         });
     }
@@ -40,6 +46,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('imovels');
+        Schema::dropIfExists('imoveis');
     }
 };

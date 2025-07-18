@@ -30,7 +30,7 @@ class ImovelResource extends Resource
 {
     protected static ?string $model = Imovel::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-home';
+    protected static ?string $navigationIcon = 'heroicon-o-building-office-2';
 
     protected static ?string $navigationLabel = 'Imóveis';
 
@@ -49,30 +49,31 @@ class ImovelResource extends Resource
                             ->required()
                             ->maxLength(255),
 
-                        Textarea::make('descricao')
+                        Forms\Components\RichEditor::make('descricao')
                             ->label('Descrição')
                             ->required()
-                            ->rows(4),
-
-                        Select::make('tipo')
-                            ->label('Tipo de Imóvel')
-                            ->options([
-                                'casa' => 'Casa',
-                                'apartamento' => 'Apartamento',
-                                'apartamento_duplex' => 'Apartamento Duplex',
-                                'chale' => 'Chalé',
-                                'kitnet' => 'Kitnet',
-                                'sobrado' => 'Sobrado',
-                                'comercial' => 'Comercial',
-                                'loja' => 'Loja',
-                                'galpao' => 'Galpão',
-                                'pousada' => 'Pousada',
-                                'predio' => 'Prédio',
-                                'sala' => 'Sala',
-                                'terreno' => 'Terreno',
-                                'sitio' => 'Sítio',
-                                'lote' => 'Lote',
+                            ->toolbarButtons([
+                                'bold',
+                                'italic',
+                                'underline',
+                                'strike',
+                                'link',
+                                'bulletList',
+                                'orderedList',
+                                'blockquote',
+                                'codeBlock',
+                                'h2',
+                                'h3',
+                                'h4',
+                                'undo',
+                                'redo',
+                                'removeFormat'
                             ])
+                            ->columnSpanFull(),
+
+                        Select::make('tipo_id')
+                            ->label('Tipo de Imóvel')
+                            ->relationship('tipo', 'nome')
                             ->required(),
 
                         Select::make('status')
@@ -85,15 +86,27 @@ class ImovelResource extends Resource
                             ->default('disponivel')
                             ->required(),
 
+                        Toggle::make('destaque')
+                            ->label('Destaque')
+                            ->default(false),
+                    ])->columns(2),
+
+                Section::make('Financeiro')
+                    ->schema([
+                        TextInput::make('iptu')
+                            ->label('Preço de IPTU')
+                            ->numeric()
+                            ->prefix('R$'),
+                        TextInput::make('condominio')
+                            ->label('Preço de Condomínio')
+                            ->numeric()
+                            ->prefix('R$'),
                         TextInput::make('preco')
                             ->label('Preço')
                             ->numeric()
                             ->prefix('R$')
                             ->required(),
 
-                        Toggle::make('destaque')
-                            ->label('Destaque')
-                            ->default(false),
                     ])->columns(2),
 
                 Section::make('Características')
@@ -102,19 +115,26 @@ class ImovelResource extends Resource
                             ->label('Área ')
                             ->suffix(' m²')
                             ->numeric()
-                            ->required(),
+                            ->required()
+                            ->minValue(0),
 
                         TextInput::make('area_util')
                             ->label('Área útil')
-                            ->suffix(' m²'),
+                            ->suffix(' m²')
+                            ->numeric()
+                            ->minValue(0),
 
                         TextInput::make('terreno')
                             ->label('Terreno')
-                            ->suffix(' m²'),
+                            ->suffix(' m²')
+                            ->numeric()
+                            ->minValue(0),
 
                         TextInput::make('area_constr')
                             ->label('Área constr.')
-                            ->suffix(' m²'),
+                            ->suffix(' m²')
+                            ->numeric()
+                            ->minValue(0),
 
                         TextInput::make('quartos')
                             ->label('Quartos')
@@ -155,6 +175,12 @@ class ImovelResource extends Resource
                             ->label('CEP')
                             ->length(8)
                             ->required(),
+
+                        TextInput::make('localizacao_maps')
+                            ->label('Localização Google Maps')
+                            ->url()
+                            ->required(),
+
                     ])->columns(2),
 
                 Section::make('Características Extras')
@@ -200,7 +226,9 @@ class ImovelResource extends Resource
                             ->maxItems(5)
                             ->helperText('Adicione até 5 links de vídeos do YouTube para mostrar o imóvel'),
                     ]),
-             
+
+
+
             ]);
     }
 
@@ -213,16 +241,9 @@ class ImovelResource extends Resource
                     ->searchable()
                     ->sortable(),
 
-                TextColumn::make('tipo')
+                TextColumn::make('tipo.nome')
                     ->label('Tipo')
-                    ->badge()
-                    ->color(fn(string $state): string => match ($state) {
-                        'casa' => 'success',
-                        'apartamento' => 'info',
-                        'terreno' => 'warning',
-                        'comercial' => 'danger',
-                        default => 'gray',
-                    }),
+                    ->sortable(),
 
                 TextColumn::make('preco')
                     ->label('Preço')
@@ -232,16 +253,16 @@ class ImovelResource extends Resource
                 TextColumn::make('area')
                     ->label('Área')
                     ->suffix(' m²')
-                    ->sortable(),              
+                    ->sortable(),
 
                 TextColumn::make('cidade')
                     ->label('Cidade')
                     ->searchable(),
 
-                TextColumn::make('status')
+                TextColumn::make('statusImovel.nome')
                     ->label('Status')
                     ->badge()
-                    ->color(fn(string $state): string => match ($state) {
+                    ->color(fn($record) => match (strtolower($record->statusImovel->nome ?? '')) {
                         'disponivel' => 'success',
                         'vendido' => 'danger',
                         'alugado' => 'warning',
@@ -249,7 +270,7 @@ class ImovelResource extends Resource
                     }),
 
                 ToggleColumn::make('destaque')
-                    ->label('Destaque'),
+                    ->label('Destaque'),           
 
                 // TextColumn::make('videos')
                 //     ->label('Vídeos')

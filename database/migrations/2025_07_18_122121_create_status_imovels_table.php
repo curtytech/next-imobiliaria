@@ -11,8 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('imovels', function (Blueprint $table) {
-            //
+        Schema::create('status_imovels', function (Blueprint $table) {
+            $table->id();
+            $table->string('nome');
+            $table->timestamps();
         });
     }
 
@@ -21,8 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('imovels', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('status_imovels');
     }
 };
