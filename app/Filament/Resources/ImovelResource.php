@@ -26,6 +26,7 @@ use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
 
+
 class ImovelResource extends Resource
 {
     protected static ?string $model = Imovel::class;
@@ -76,15 +77,11 @@ class ImovelResource extends Resource
                             ->relationship('tipo', 'nome')
                             ->required(),
 
-                        Select::make('status')
+                        Select::make('status_id')
                             ->label('Status')
-                            ->options([
-                                'disponivel' => 'Disponível',
-                                'vendido' => 'Vendido',
-                                'alugado' => 'Alugado',
-                            ])
-                            ->default('disponivel')
-                            ->required(),
+                            ->relationship('statusImovel', 'nome')
+                            ->required()
+                            ->default(1),
 
                         Toggle::make('destaque')
                             ->label('Destaque')
@@ -174,6 +171,7 @@ class ImovelResource extends Resource
                         TextInput::make('cep')
                             ->label('CEP')
                             ->length(8)
+                            ->numeric()
                             ->required(),
 
                         TextInput::make('localizacao_maps')
@@ -270,7 +268,7 @@ class ImovelResource extends Resource
                     }),
 
                 ToggleColumn::make('destaque')
-                    ->label('Destaque'),           
+                    ->label('Destaque'),
 
                 // TextColumn::make('videos')
                 //     ->label('Vídeos')
