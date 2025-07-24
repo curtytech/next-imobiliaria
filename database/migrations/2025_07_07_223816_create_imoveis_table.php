@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('titulo');
             $table->text('descricao');
+            $table->foreignId('user_id')->constrained('users');
             $table->foreignId('tipo_id')->constrained('tipos_imoveis');
             $table->foreignId('status_id')->constrained('status_imovels')->default(1);
             $table->decimal('preco', 12, 2);

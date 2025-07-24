@@ -83,6 +83,12 @@ class ImovelResource extends Resource
                             ->required()
                             ->default(1),
 
+                        Select::make('status_id')
+                            ->label('Corretor Responsável')
+                            ->relationship('statusImovel', 'nome')
+                            ->required()
+                            ->default(1),
+
                         Toggle::make('destaque')
                             ->label('Destaque')
                             ->default(false),

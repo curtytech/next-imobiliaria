@@ -260,10 +260,11 @@ class ImovelSeeder extends Seeder
                 $status = StatusImovel::first();
             }
             Imovel::create([
+                'user_id' => 1,
                 'titulo' => $imovel['titulo'],
                 'descricao' => $imovel['descricao'],
-                'tipo_id' => $tipo ? $tipo->id : null,
-                'status_id' => $status ? $status->id : null,
+                'tipo_id' => 1,
+                'status_id' => 1,
                 'preco' => $imovel['preco'],
                 'preco_iptu' => $imovel['preco_iptu'] ?? null,
                 'preco_condominio' => $imovel['preco_condominio'] ?? null,
