@@ -28,8 +28,9 @@ return new class extends Migration
             $table->string('endereco');
             $table->string('bairro');
             $table->string('cidade');
-            $table->string('estado', 2);
-            $table->string('cep', 8);
+            $table->string('estado');
+            $table->string('pais');
+            $table->string('cep', 15);
             $table->json('caracteristicas')->nullable(); // características extras
             $table->json('fotos')->nullable(); // URLs das fotos
             $table->json('videos')->nullable(); // URLs dos vídeos do YouTube

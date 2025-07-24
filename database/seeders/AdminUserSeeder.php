@@ -25,6 +25,7 @@ class AdminUserSeeder extends Seeder
         User::factory()->create([
             'name' => 'Corretor',
             'email' => 'corretor@corretor.com',
+            'creci' => '12545',
             'email_verified_at' => now(),
             'password' => Hash::make('12345678'),
             'role' => 'corretor',

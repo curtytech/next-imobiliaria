@@ -33,6 +33,7 @@ class ImovelSeeder extends Seeder
                 'bairro' => 'Jardim Europa',
                 'cidade' => 'Magé',
                 'estado' => 'RJ',
+                'pais' => 'Brasil',
                 'cep' => '25900000',
                 'caracteristicas' => [
                     'Piscina' => 'Sim',
@@ -66,6 +67,7 @@ class ImovelSeeder extends Seeder
                 'bairro' => 'Centro',
                 'cidade' => 'Magé',
                 'estado' => 'RJ',
+                'pais' => 'Brasil',
                 'cep' => '25900000',
                 'caracteristicas' => [
                     'Portaria 24h' => 'Sim',
@@ -97,6 +99,7 @@ class ImovelSeeder extends Seeder
                 'bairro' => 'Piabetá',
                 'cidade' => 'Magé',
                 'estado' => 'RJ',
+                'pais' => 'Brasil',
                 'cep' => '25900000',
                 'caracteristicas' => [
                     'Área Plana' => 'Sim',
@@ -126,6 +129,7 @@ class ImovelSeeder extends Seeder
                 'bairro' => 'Centro',
                 'cidade' => 'Magé',
                 'estado' => 'RJ',
+                'pais' => 'Brasil',
                 'cep' => '25900000',
                 'caracteristicas' => [
                     'Ar Condicionado' => 'Sim',
@@ -155,6 +159,7 @@ class ImovelSeeder extends Seeder
                 'bairro' => 'Vila Nova',
                 'cidade' => 'Magé',
                 'estado' => 'RJ',
+                'pais' => 'Brasil',
                 'cep' => '25900000',
                 'caracteristicas' => [
                     'Quintal' => 'Sim',
@@ -182,6 +187,7 @@ class ImovelSeeder extends Seeder
                 'bairro' => 'Jardim Europa',
                 'cidade' => 'Magé',
                 'estado' => 'RJ',
+                'pais' => 'Brasil',
                 'cep' => '25900000',
                 'caracteristicas' => [
                     'Suíte' => 'Sim',
@@ -210,6 +216,7 @@ class ImovelSeeder extends Seeder
                 'bairro' => 'Santo Aleixo',
                 'cidade' => 'Magé',
                 'estado' => 'RJ',
+                'pais' => 'Brasil',
                 'cep' => '25900000',
                 'caracteristicas' => [
                     '2 Suítes' => 'Sim',
@@ -240,6 +247,7 @@ class ImovelSeeder extends Seeder
                 'bairro' => 'Centro',
                 'cidade' => 'Magé',
                 'estado' => 'RJ',
+                'pais' => 'Brasil',
                 'cep' => '25900000',
                 'caracteristicas' => [
                     'Vitrine' => 'Sim',
@@ -276,6 +284,7 @@ class ImovelSeeder extends Seeder
                 'bairro' => $imovel['bairro'],
                 'cidade' => $imovel['cidade'],
                 'estado' => $imovel['estado'],
+                'pais' => $imovel['pais'],
                 'cep' => $imovel['cep'],
                 'caracteristicas' => $imovel['caracteristicas'],
                 'fotos' => $imovel['fotos'],
