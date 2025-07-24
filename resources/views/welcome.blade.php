@@ -168,9 +168,9 @@
                         <!-- Agent Card 1 -->
                         <div
                             class="p-8 text-center bg-white rounded-xl shadow-lg transition-shadow duration-300 hover:shadow-xl group">
-                            <img src="https://placehold.co/128x128/EFEFEF/777777?text=Foto" alt="Corretora Bruna Rocha"
+                            <img src="https://placehold.co/128x128/EFEFEF/777777?text=Foto" alt="Corretora Cristina Almeida"
                                 class="mx-auto mb-4 w-32 h-32 rounded-full border-4 border-white transition-colors duration-300 group-hover:border-primary">
-                            <h3 class="text-xl font-bold text-gray-800">Bruna Rocha</h3>
+                            <h3 class="text-xl font-bold text-gray-800">Cristina Almeida</h3>
                             <p class="mb-4 font-semibold text-primary">CRECI-RJ 12345</p>
                             <p class="mb-4 text-gray-600">Fundadora e especialista em imóveis de alto padrão. Paixão por
                                 realizar sonhos.</p>
