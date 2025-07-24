@@ -14,13 +14,20 @@ class AdminUserSeeder extends Seeder
      */
     public function run(): void
     {
-        User::updateOrCreate(
-            [ 'email' => 'admin@admin.com' ],
-            [
-                'name' => 'Admin',
-                'password' => Hash::make('12345678'),
-                'role' => 'admin',
-            ]
-        );
+        User::factory()->create([
+            'name' => 'Admin',
+            'email' => 'admin@admin.com',
+            'email_verified_at' => now(),
+            'password' => Hash::make('12345678'),
+            'role' => 'admin',
+        ]);
+
+        User::factory()->create([
+            'name' => 'Corretor',
+            'email' => 'corretor@corretor.com',
+            'email_verified_at' => now(),
+            'password' => Hash::make('12345678'),
+            'role' => 'corretor',
+        ]);
     }
 }
