@@ -20,6 +20,8 @@ use Filament\Tables\Actions\BulkActionGroup;
 use Filament\Tables\Actions\DeleteBulkAction;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Database\Eloquent\Builder;
+use Filament\Facades\Filament;
 
 class UserResource extends Resource
 {
@@ -57,19 +59,27 @@ class UserResource extends Resource
 
                 Select::make('role')
                     ->label('Papel')
-                    ->options([
-                        'admin' => 'Administrador',
-                        'corretor' => 'Corretor',
-                    ])
+                    ->options(function () {
+                        $user = Filament::auth()->user();
+
+                        if ($user->role === 'corretor') {
+                            return ['corretor' => 'Corretor']; 
+                        }
+
+                        return [
+                            'admin' => 'Administrador',
+                            'corretor' => 'Corretor',
+                        ];
+                    })
                     ->default('corretor')
                     ->required(),
 
                 TextInput::make('password')
                     ->label('Senha')
                     ->password()
-                    ->dehydrateStateUsing(fn ($state) => filled($state) ? Hash::make($state) : null)
-                    ->dehydrated(fn ($state) => filled($state))
-                    ->required(fn (string $context): bool => $context === 'create')
+                    ->dehydrateStateUsing(fn($state) => filled($state) ? Hash::make($state) : null)
+                    ->dehydrated(fn($state) => filled($state))
+                    ->required(fn(string $context): bool => $context === 'create')
                     ->maxLength(255),
             ])->columns(2),
 
@@ -100,12 +110,12 @@ class UserResource extends Resource
                 TextColumn::make('role')
                     ->label('Papel')
                     ->badge()
-                    ->color(fn (string $state): string => match ($state) {
+                    ->color(fn(string $state): string => match ($state) {
                         'admin' => 'danger',
                         'corretor' => 'success',
                         default => 'gray',
                     })
-                    ->formatStateUsing(fn (string $state): string => match ($state) {
+                    ->formatStateUsing(fn(string $state): string => match ($state) {
                         'admin' => 'Administrador',
                         'corretor' => 'Corretor',
                         default => ucfirst($state),
@@ -148,5 +158,18 @@ class UserResource extends Resource
             'create' => Pages\CreateUser::route('/create'),
             'edit' => Pages\EditUser::route('/{record}/edit'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        $query = parent::getEloquentQuery();
+
+        $user = Filament::auth()->user();
+
+        if ($user->role === 'corretor') {
+            return $query->where('id', $user->id);
+        }
+
+        return $query;
     }
 }
