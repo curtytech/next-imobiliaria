@@ -17,7 +17,7 @@ class TipoResource extends Resource
 {
     protected static ?string $model = TipoImovel::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-building-office';
 
     protected static ?string $navigationLabel = 'Tipos de Imóveis';
 
@@ -68,5 +68,10 @@ class TipoResource extends Resource
             'create' => Pages\CreateTipo::route('/create'),
             'edit' => Pages\EditTipo::route('/{record}/edit'),
         ];
+    }
+
+    public static function canViewAny(): bool
+    {
+        return auth()->user()?->role === 'admin';
     }
 }

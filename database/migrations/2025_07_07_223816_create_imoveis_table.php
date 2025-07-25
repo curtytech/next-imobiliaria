@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('titulo');
             $table->text('descricao');
+            $table->foreignId('user_id')->constrained('users');
             $table->foreignId('tipo_id')->constrained('tipos_imoveis');
             $table->foreignId('status_id')->constrained('status_imovels')->default(1);
             $table->decimal('preco', 12, 2);
@@ -27,8 +28,9 @@ return new class extends Migration
             $table->string('endereco');
             $table->string('bairro');
             $table->string('cidade');
-            $table->string('estado', 2);
-            $table->string('cep', 8);
+            $table->string('estado');
+            $table->string('pais');
+            $table->string('cep', 15);
             $table->json('caracteristicas')->nullable(); // características extras
             $table->json('fotos')->nullable(); // URLs das fotos
             $table->json('videos')->nullable(); // URLs dos vídeos do YouTube

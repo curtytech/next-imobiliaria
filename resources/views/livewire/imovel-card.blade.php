@@ -30,6 +30,6 @@
     </div>
     <div class="flex items-center p-4 border-t border-gray-100">
         <img src="https://placehold.co/32x32/EFEFEF/777777?text=BR" alt="Corretor" class="mr-2 w-8 h-8 rounded-full">
-        <span class="text-xs text-gray-700">Bruna Rocha</span>
+        <span class="text-xs text-gray-700">Cristina Almeida</span>
     </div>
 </div>

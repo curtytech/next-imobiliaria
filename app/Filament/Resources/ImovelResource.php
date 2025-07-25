@@ -25,6 +25,8 @@ use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
+use Filament\Facades\Filament;
+
 
 class ImovelResource extends Resource
 {
@@ -76,15 +78,17 @@ class ImovelResource extends Resource
                             ->relationship('tipo', 'nome')
                             ->required(),
 
-                        Select::make('status')
+                        Select::make('status_id')
                             ->label('Status')
-                            ->options([
-                                'disponivel' => 'Disponível',
-                                'vendido' => 'Vendido',
-                                'alugado' => 'Alugado',
-                            ])
-                            ->default('disponivel')
-                            ->required(),
+                            ->relationship('statusImovel', 'nome')
+                            ->required()
+                            ->default(1),
+
+                        Select::make('status_id')
+                            ->label('Corretor Responsável')
+                            ->relationship('statusImovel', 'nome')
+                            ->required()
+                            ->default(1),
 
                         Toggle::make('destaque')
                             ->label('Destaque')
@@ -168,12 +172,81 @@ class ImovelResource extends Resource
 
                         TextInput::make('estado')
                             ->label('Estado')
-                            ->length(2)
                             ->required(),
+
+                        // Select::make('estado')
+                        //     ->label('Estado')
+                        //     ->options([
+                        //         'AC' => 'Acre',
+                        //         'AL' => 'Alagoas',
+                        //         'AP' => 'Amapá',
+                        //         'AM' => 'Amazonas',
+                        //         'BA' => 'Bahia',
+                        //         'CE' => 'Ceará',
+                        //         'DF' => 'Distrito Federal',
+                        //         'ES' => 'Espírito Santo',
+                        //         'GO' => 'Goiás',
+                        //         'MA' => 'Maranhão',
+                        //         'MT' => 'Mato Grosso',
+                        //         'MS' => 'Mato Grosso do Sul',
+                        //         'MG' => 'Minas Gerais',
+                        //         'PA' => 'Pará',
+                        //         'PB' => 'Paraíba',
+                        //         'PR' => 'Paraná',
+                        //         'PE' => 'Pernambuco',
+                        //         'PI' => 'Piauí',
+                        //         'RJ' => 'Rio de Janeiro',
+                        //         'RN' => 'Rio Grande do Norte',
+                        //         'RS' => 'Rio Grande do Sul',
+                        //         'RO' => 'Rondônia',
+                        //         'RR' => 'Roraima',
+                        //         'SC' => 'Santa Catarina',
+                        //         'SP' => 'São Paulo',
+                        //         'SE' => 'Sergipe',
+                        //         'TO' => 'Tocantins',
+                        //     ])
+                        //     ->required(),
+
+                        Select::make('pais')
+                            ->label('País')
+                            ->options([
+                                'Brasil' => 'Brasil',
+                                'Estados Unidos' => 'Estados Unidos',
+                                'Argentina' => 'Argentina',
+                                'Chile' => 'Chile',
+                                'Alemanha' => 'Alemanha',
+                                'Áustria' => 'Áustria',
+                                'Bulgária' => 'Bulgária',
+                                'Dinamarca' => 'Dinamarca',
+                                'Espanha' => 'Espanha',
+                                'França' => 'França',
+                                'Grécia' => 'Grécia',
+                                'Irlanda' => 'Irlanda',
+                                'Islândia' => 'Islândia',
+                                'Itália' => 'Itália',
+                                'Letônia' => 'Letônia',
+                                'Lituânia' => 'Lituânia',
+                                'Mônaco' => 'Mônaco',
+                                'Noruega' => 'Noruega',
+                                'Holanda' => 'Holanda',
+                                'Polônia' => 'Polônia',
+                                'Portugal' => 'Portugal',
+                                'Reino Unido' => 'Reino Unido',
+                                'República Tcheca' => 'República Tcheca',
+                                'Romênia' => 'Romênia',
+                                'Rússia' => 'Rússia',
+                                'San Marino' => 'San Marino',
+                                'Sérvia' => 'Sérvia',
+                                'Suécia' => 'Suécia',
+                                'Suíça' => 'Suíça',
+                            ])
+                            ->required(),
+
 
                         TextInput::make('cep')
                             ->label('CEP')
                             ->length(8)
+                            ->numeric()
                             ->required(),
 
                         TextInput::make('localizacao_maps')
@@ -270,7 +343,7 @@ class ImovelResource extends Resource
                     }),
 
                 ToggleColumn::make('destaque')
-                    ->label('Destaque'),           
+                    ->label('Destaque'),
 
                 // TextColumn::make('videos')
                 //     ->label('Vídeos')
@@ -330,5 +403,27 @@ class ImovelResource extends Resource
             'create' => Pages\CreateImovel::route('/create'),
             'edit' => Pages\EditImovel::route('/{record}/edit'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        $query = parent::getEloquentQuery();
+
+        $user = Filament::auth()->user();
+
+        if ($user->role === 'corretor') {
+            return $query->where('user_id', $user->id);
+        }
+
+        return $query;
+    }
+
+    protected function mutateFormDataBeforeCreate(array $data): array
+    {
+        if (Filament::auth()->user()->role === 'corretor') {
+            $data['user_id'] = Filament::auth()->id();
+        }
+
+        return $data;
     }
 }
