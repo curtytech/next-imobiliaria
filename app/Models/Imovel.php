@@ -27,6 +27,7 @@ class Imovel extends Model
         'bairro',
         'cidade',
         'estado',
+        'pais',
         'cep',
         'localizacao_maps',
         'caracteristicas',

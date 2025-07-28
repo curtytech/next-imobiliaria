@@ -83,6 +83,12 @@ class ImovelResource extends Resource
                             ->required()
                             ->default(1),
 
+                        Select::make('status_id')
+                            ->label('Corretor Responsável')
+                            ->relationship('statusImovel', 'nome')
+                            ->required()
+                            ->default(1),
+
                         Toggle::make('destaque')
                             ->label('Destaque')
                             ->default(false),
@@ -165,8 +171,76 @@ class ImovelResource extends Resource
 
                         TextInput::make('estado')
                             ->label('Estado')
-                            ->length(2)
                             ->required(),
+
+                        // Select::make('estado')
+                        //     ->label('Estado')
+                        //     ->options([
+                        //         'AC' => 'Acre',
+                        //         'AL' => 'Alagoas',
+                        //         'AP' => 'Amapá',
+                        //         'AM' => 'Amazonas',
+                        //         'BA' => 'Bahia',
+                        //         'CE' => 'Ceará',
+                        //         'DF' => 'Distrito Federal',
+                        //         'ES' => 'Espírito Santo',
+                        //         'GO' => 'Goiás',
+                        //         'MA' => 'Maranhão',
+                        //         'MT' => 'Mato Grosso',
+                        //         'MS' => 'Mato Grosso do Sul',
+                        //         'MG' => 'Minas Gerais',
+                        //         'PA' => 'Pará',
+                        //         'PB' => 'Paraíba',
+                        //         'PR' => 'Paraná',
+                        //         'PE' => 'Pernambuco',
+                        //         'PI' => 'Piauí',
+                        //         'RJ' => 'Rio de Janeiro',
+                        //         'RN' => 'Rio Grande do Norte',
+                        //         'RS' => 'Rio Grande do Sul',
+                        //         'RO' => 'Rondônia',
+                        //         'RR' => 'Roraima',
+                        //         'SC' => 'Santa Catarina',
+                        //         'SP' => 'São Paulo',
+                        //         'SE' => 'Sergipe',
+                        //         'TO' => 'Tocantins',
+                        //     ])
+                        //     ->required(),
+
+                        Select::make('pais')
+                            ->label('País')
+                            ->options([
+                                'Brasil' => 'Brasil',
+                                'Estados Unidos' => 'Estados Unidos',
+                                'Argentina' => 'Argentina',
+                                'Chile' => 'Chile',
+                                'Alemanha' => 'Alemanha',
+                                'Áustria' => 'Áustria',
+                                'Bulgária' => 'Bulgária',
+                                'Dinamarca' => 'Dinamarca',
+                                'Espanha' => 'Espanha',
+                                'França' => 'França',
+                                'Grécia' => 'Grécia',
+                                'Irlanda' => 'Irlanda',
+                                'Islândia' => 'Islândia',
+                                'Itália' => 'Itália',
+                                'Letônia' => 'Letônia',
+                                'Lituânia' => 'Lituânia',
+                                'Mônaco' => 'Mônaco',
+                                'Noruega' => 'Noruega',
+                                'Holanda' => 'Holanda',
+                                'Polônia' => 'Polônia',
+                                'Portugal' => 'Portugal',
+                                'Reino Unido' => 'Reino Unido',
+                                'República Tcheca' => 'República Tcheca',
+                                'Romênia' => 'Romênia',
+                                'Rússia' => 'Rússia',
+                                'San Marino' => 'San Marino',
+                                'Sérvia' => 'Sérvia',
+                                'Suécia' => 'Suécia',
+                                'Suíça' => 'Suíça',                                
+                            ])
+                            ->required(),
+
 
                         TextInput::make('cep')
                             ->label('CEP')

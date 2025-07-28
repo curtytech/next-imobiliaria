@@ -11,3 +11,10 @@
 Ideias Dashboard 
 Lista de Imoveis mais vistos
 
+
+
+# Comands
+
+php artisan migrate
+
+php artisan db:seed
