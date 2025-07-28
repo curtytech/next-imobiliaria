@@ -90,11 +90,11 @@ class ImovelResource extends Resource
 
                 Section::make('Financeiro')
                     ->schema([
-                        TextInput::make('iptu')
+                        TextInput::make('preco_iptu')
                             ->label('Preço de IPTU')
                             ->numeric()
                             ->prefix('R$'),
-                        TextInput::make('condominio')
+                        TextInput::make('preco_condominio')
                             ->label('Preço de Condomínio')
                             ->numeric()
                             ->prefix('R$'),

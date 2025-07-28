@@ -17,6 +17,8 @@ class Imovel extends Model
         'tipo_id',
         'status_id',
         'preco',
+        'preco_iptu',
+        'preco_condominio',
         'area',
         'quartos',
         'banheiros',
@@ -26,6 +28,7 @@ class Imovel extends Model
         'cidade',
         'estado',
         'cep',
+        'localizacao_maps',
         'caracteristicas',
         'fotos',
         'videos',
@@ -37,6 +40,8 @@ class Imovel extends Model
 
     protected $casts = [
         'preco' => 'decimal:2',
+        'preco_iptu' => 'decimal:2',
+        'preco_condominio' => 'decimal:2',
         'caracteristicas' => 'array',
         'fotos' => 'array',
         'videos' => 'array',
@@ -65,7 +70,9 @@ class Imovel extends Model
 
     public function scopeDisponiveis($query)
     {
-        return $query->where('status', 'disponivel');
+        return $query->whereHas('statusImovel', function($q) {
+            $q->where('nome', 'Disponível');
+        });
     }
 
     public function scopeDestaque($query)

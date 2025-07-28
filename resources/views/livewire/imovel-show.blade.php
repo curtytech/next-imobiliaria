@@ -295,7 +295,7 @@ $propertyTypeLabel = computed(function () {
                                     Solicitar Informações
                                 </button>
                                 <button class="w-full py-3 px-4 border border-primary text-primary rounded-lg hover:bg-primary hover:text-white transition-colors font-semibold">
-                                    <x-whatsapp-icon class="inline w-4 h-4 mr-2" />
+                                    <x-lucide-message-circle class="inline w-4 h-4 mr-2" />
                                     WhatsApp
                                 </button>
                             </div>
@@ -357,9 +357,9 @@ $propertyTypeLabel = computed(function () {
                                 <div class="flex items-center justify-between">
                                     <span class="text-gray-600">Status</span>
                                     <span class="px-2 py-1 text-xs font-semibold rounded-full 
-                                        {{ $imovel->status === 'disponivel' ? 'bg-green-100 text-green-800' : 
-                                           ($imovel->status === 'vendido' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800') }}">
-                                        {{ ucfirst($imovel->status) }}
+                                        {{ $imovel->statusImovel?->nome === 'Disponível' ? 'bg-green-100 text-green-800' : 
+                                           ($imovel->statusImovel?->nome === 'Vendido' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800') }}">
+                                        {{ $imovel->statusImovel?->nome ?? 'N/A' }}
                                     </span>
                                 </div>
                             </div>
@@ -489,4 +489,4 @@ $propertyTypeLabel = computed(function () {
             @endif
         @endif
     </div>
-</main> 
+</main>
