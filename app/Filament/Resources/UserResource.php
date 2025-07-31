@@ -41,6 +41,11 @@ class UserResource extends Resource
                     ->label('Nome')
                     ->required()
                     ->maxLength(255),
+                    
+                TextInput::make('descricao')
+                    ->label('Descrição')
+                    ->required()
+                    ->maxLength(255),
 
                 TextInput::make('creci')
                     ->label('Creci')
