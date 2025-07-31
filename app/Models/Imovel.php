@@ -37,6 +37,7 @@ class Imovel extends Model
         'area_util',
         'terreno',
         'area_constr',
+        'corretor_id',
     ];
 
     protected $casts = [
@@ -49,7 +50,7 @@ class Imovel extends Model
         'destaque' => 'boolean',
     ];
 
-    public function tipo()
+    public function tipoImovel()
     {
         return $this->belongsTo(TipoImovel::class, 'tipo_id');
     }
@@ -57,6 +58,11 @@ class Imovel extends Model
     public function statusImovel()
     {
         return $this->belongsTo(StatusImovel::class, 'status_id');
+    }
+
+    public function corretor()
+    {
+        return $this->belongsTo(User::class, 'corretor_id');
     }
 
     public function getPrecoFormatadoAttribute()
@@ -67,6 +73,16 @@ class Imovel extends Model
     public function getEnderecoCompletoAttribute()
     {
         return "{$this->endereco}, {$this->bairro}, {$this->cidade} - {$this->estado}, CEP: {$this->cep}";
+    }
+
+    public function getImagemPrincipalAttribute()
+    {
+        return $this->fotos[0] ?? 'https://via.placeholder.com/400x250.png?text=Sem+Imagem';
+    }
+
+    public function getLocalizacaoAttribute()
+    {
+        return "{$this->bairro}, {$this->cidade}";
     }
 
     public function scopeDisponiveis($query)

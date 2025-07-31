@@ -23,7 +23,7 @@ mount(function ($id) {
         $this->loading = true;
         $this->error = null;
         
-        $this->imovel = Imovel::findOrFail($id);
+        $this->imovel = Imovel::with(['tipoImovel', 'statusImovel', 'corretor'])->findOrFail($id);
         
         // Set default message for contact form
         $this->contactForm['message'] = "Olá! Tenho interesse no imóvel: {$this->imovel->titulo}";

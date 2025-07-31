@@ -50,29 +50,29 @@
                     @if (count($imovelCards) >= 6)
                         <!-- Primeira linha: 1 largo, 2 estreitos -->
                         <div class="md:col-span-2 bento-card">
-                            @livewire('imovel-card', $imovelCards[0])
+                            @livewire('imovel-card', ['imovel' => $imovelCards[0]])
                         </div>
                         <div class="md:col-span-1 bento-card">
-                            @livewire('imovel-card', $imovelCards[1])
+                            @livewire('imovel-card', ['imovel' => $imovelCards[1]])
                         </div>
                         <div class="md:col-span-1 bento-card">
-                            @livewire('imovel-card', $imovelCards[2])
+                            @livewire('imovel-card', ['imovel' => $imovelCards[2]])
                         </div>
                         <!-- Segunda linha: 2 estreitos, 1 largo -->
                         <div class="md:col-span-1 bento-card">
-                            @livewire('imovel-card', $imovelCards[3])
+                            @livewire('imovel-card', ['imovel' => $imovelCards[3]])
                         </div>
                         <div class="md:col-span-1 bento-card">
-                            @livewire('imovel-card', $imovelCards[4])
+                            @livewire('imovel-card', ['imovel' => $imovelCards[4]])
                         </div>
                         <div class="md:col-span-2 bento-card">
-                            @livewire('imovel-card', $imovelCards[5])
+                            @livewire('imovel-card', ['imovel' => $imovelCards[5]])
                         </div>
                     @else
                         <!-- Grid adaptável para menos de 6 cards -->
                         @foreach ($imovelCards as $index => $card)
                             <div class="md:col-span-{{ $index === 0 || $index === 5 ? '2' : '1' }} bento-card">
-                                @livewire('imovel-card', $card)
+                                @livewire('imovel-card', ['imovel' => $card])
                             </div>
                         @endforeach
                     @endif
