@@ -12,8 +12,15 @@ state([
     'priceMax' => '',
     'areaMin' => '',
     'areaMax' => '',
+    'areaUtilMin' => '',
+    'areaUtilMax' => '',
+    'terrenoMin' => '',
+    'terrenoMax' => '',
     'bedrooms' => '',
     'bathrooms' => '',
+    'garageSpaces' => '',
+    'neighborhood' => '',
+    'cep' => '',
     'viewMode' => 'grid',
     'sortBy' => 'recent',
     'propertiesFound' => 0,
@@ -52,6 +59,16 @@ $buildQuery = function () {
             });
         }
 
+        // Neighborhood filter
+        if (!empty($this->neighborhood)) {
+            $query->where('bairro', 'like', '%' . trim($this->neighborhood) . '%');
+        }
+
+        // CEP filter
+        if (!empty($this->cep)) {
+            $query->where('cep', 'like', '%' . trim($this->cep) . '%');
+        }
+
         // Property type filter
         if (!empty($this->propertyType)) {
             $query->whereHas('tipoImovel', function($q) {
@@ -75,6 +92,22 @@ $buildQuery = function () {
             $query->where('area', '<=', (float) $this->areaMax);
         }
 
+        // Useful area filter
+        if (!empty($this->areaUtilMin) && is_numeric($this->areaUtilMin)) {
+            $query->where('area_util', '>=', (float) $this->areaUtilMin);
+        }
+        if (!empty($this->areaUtilMax) && is_numeric($this->areaUtilMax)) {
+            $query->where('area_util', '<=', (float) $this->areaUtilMax);
+        }
+
+        // Land area filter
+        if (!empty($this->terrenoMin) && is_numeric($this->terrenoMin)) {
+            $query->where('terreno', '>=', (float) $this->terrenoMin);
+        }
+        if (!empty($this->terrenoMax) && is_numeric($this->terrenoMax)) {
+            $query->where('terreno', '<=', (float) $this->terrenoMax);
+        }
+
         // Bedrooms filter
         if (!empty($this->bedrooms) && is_numeric($this->bedrooms)) {
             $query->where('quartos', '>=', (int) $this->bedrooms);
@@ -83,6 +116,11 @@ $buildQuery = function () {
         // Bathrooms filter
         if (!empty($this->bathrooms) && is_numeric($this->bathrooms)) {
             $query->where('banheiros', '>=', (int) $this->bathrooms);
+        }
+
+        // Garage spaces filter
+        if (!empty($this->garageSpaces) && is_numeric($this->garageSpaces)) {
+            $query->where('vagas_garagem', '>=', (int) $this->garageSpaces);
         }
 
         // Sorting
@@ -267,6 +305,58 @@ $retryLoad = function () {
                             <option value="3">3+</option>
                             <option value="4">4+</option>
                         </select>
+                    </div>
+
+                    <div>
+                        <label class="block mb-2 text-sm font-semibold">Vagas de Garagem</label>
+                        <select wire:model.live="garageSpaces"
+                            class="px-4 py-2 w-full bg-gray-50 rounded-lg border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary">
+                            <option value="">Qualquer</option>
+                            <option value="1">1+</option>
+                            <option value="2">2+</option>
+                            <option value="3">3+</option>
+                            <option value="4">4+</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block mb-2 text-sm font-semibold">Bairro</label>
+                        <input type="text" wire:model.live.debounce.500ms="neighborhood"
+                            class="px-4 py-2 w-full bg-gray-50 rounded-lg border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary"
+                            placeholder="Digite o bairro">
+                    </div>
+
+                    <div>
+                        <label class="block mb-2 text-sm font-semibold">CEP</label>
+                        <input type="text" wire:model.live.debounce.500ms="cep"
+                            class="px-4 py-2 w-full bg-gray-50 rounded-lg border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary"
+                            placeholder="Digite o CEP">
+                    </div>
+
+                    <div>
+                        <label class="block mb-2 text-sm font-semibold">Área Útil (m²)</label>
+                        <div class="flex items-center space-x-2">
+                            <input type="number" wire:model.live.debounce.500ms="areaUtilMin" min="0"
+                                class="px-2 py-1 w-1/2 bg-gray-50 rounded-lg border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary"
+                                placeholder="Mín">
+                            <span>-</span>
+                            <input type="number" wire:model.live.debounce.500ms="areaUtilMax" min="0"
+                                class="px-2 py-1 w-1/2 bg-gray-50 rounded-lg border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary"
+                                placeholder="Máx">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block mb-2 text-sm font-semibold">Terreno (m²)</label>
+                        <div class="flex items-center space-x-2">
+                            <input type="number" wire:model.live.debounce.500ms="terrenoMin" min="0"
+                                class="px-2 py-1 w-1/2 bg-gray-50 rounded-lg border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary"
+                                placeholder="Mín">
+                            <span>-</span>
+                            <input type="number" wire:model.live.debounce.500ms="terrenoMax" min="0"
+                                class="px-2 py-1 w-1/2 bg-gray-50 rounded-lg border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary"
+                                placeholder="Máx">
+                        </div>
                     </div>
                 </form>
             </aside>

@@ -368,7 +368,7 @@ $propertyTypeLabel = computed(function () {
                         <!-- Location Card -->
                         <div class="bg-white rounded-xl shadow p-6">
                             <h3 class="text-lg font-bold text-gray-900 mb-4">Localização</h3>
-                            <div class="space-y-3 text-sm">
+                            <div class="space-y-3 text-sm mb-4">
                                 <div>
                                     <span class="text-gray-600">Endereço:</span>
                                     <p class="font-medium">{{ $imovel->endereco }}</p>
@@ -384,6 +384,22 @@ $propertyTypeLabel = computed(function () {
                                 <div>
                                     <span class="text-gray-600">CEP:</span>
                                     <p class="font-medium">{{ $imovel->cep }}</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Google Maps -->
+                            <div class="mt-4">
+                                <h4 class="text-md font-semibold text-gray-900 mb-2">Mapa</h4>
+                                <div class="relative w-full h-64 rounded-lg overflow-hidden border border-gray-200">
+                                    <iframe 
+                                        src="https://www.google.com/maps?q={{ urlencode($imovel->endereco . ', ' . $imovel->bairro . ', ' . $imovel->cidade . ', ' . $imovel->estado) }}&output=embed"
+                                        width="100%" 
+                                        height="100%" 
+                                        style="border:0;" 
+                                        allowfullscreen="" 
+                                        loading="lazy" 
+                                        referrerpolicy="no-referrer-when-downgrade">
+                                    </iframe>
                                 </div>
                             </div>
                         </div>
