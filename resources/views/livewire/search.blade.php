@@ -35,6 +35,19 @@ mount(function () {
         // Receive URL parameters
         $this->location = request()->get('location', '');
         $this->propertyType = request()->get('propertyType', '');
+        $this->priceMin = request()->get('priceMin', '');
+        $this->priceMax = request()->get('priceMax', '');
+        $this->areaMin = request()->get('areaMin', '');
+        $this->areaMax = request()->get('areaMax', '');
+        $this->areaUtilMin = request()->get('areaUtilMin', '');
+        $this->areaUtilMax = request()->get('areaUtilMax', '');
+        $this->terrenoMin = request()->get('terrenoMin', '');
+        $this->terrenoMax = request()->get('terrenoMax', '');
+        $this->bedrooms = request()->get('bedrooms', '');
+        $this->bathrooms = request()->get('bathrooms', '');
+        $this->garageSpaces = request()->get('garageSpaces', '');
+        $this->neighborhood = request()->get('neighborhood', '');
+        $this->cep = request()->get('cep', '');
         $this->loadProperties();
     } catch (\Exception $e) {
         Log::error('Error mounting property search component: ' . $e->getMessage());
