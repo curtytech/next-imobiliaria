@@ -25,6 +25,7 @@ use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
+use Filament\Facades\Filament;
 
 
 class ImovelResource extends Resource
@@ -237,7 +238,7 @@ class ImovelResource extends Resource
                                 'San Marino' => 'San Marino',
                                 'Sérvia' => 'Sérvia',
                                 'Suécia' => 'Suécia',
-                                'Suíça' => 'Suíça',                                
+                                'Suíça' => 'Suíça',
                             ])
                             ->required(),
 
@@ -402,5 +403,27 @@ class ImovelResource extends Resource
             'create' => Pages\CreateImovel::route('/create'),
             'edit' => Pages\EditImovel::route('/{record}/edit'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        $query = parent::getEloquentQuery();
+
+        $user = Filament::auth()->user();
+
+        if ($user->role === 'corretor') {
+            return $query->where('user_id', $user->id);
+        }
+
+        return $query;
+    }
+
+    protected function mutateFormDataBeforeCreate(array $data): array
+    {
+        if (Filament::auth()->user()->role === 'corretor') {
+            $data['user_id'] = Filament::auth()->id();
+        }
+
+        return $data;
     }
 }

@@ -18,7 +18,7 @@ class StatusImovelResource extends Resource
     protected static ?string $model = StatusImovel::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-check-circle';
-    
+
     protected static ?string $navigationLabel = 'Status de Imóveis';
 
     protected static ?string $modelLabel = 'Status de Imóvel';
@@ -68,5 +68,10 @@ class StatusImovelResource extends Resource
             'create' => Pages\CreateStatusImovel::route('/create'),
             'edit' => Pages\EditStatusImovel::route('/{record}/edit'),
         ];
+    }
+
+    public static function canViewAny(): bool
+    {
+        return auth()->user()?->role === 'admin';
     }
 }
