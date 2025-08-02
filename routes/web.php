@@ -17,10 +17,8 @@ Volt::route('/imovel/{id}', 'imovel-show')->name('imovel.show');
 
 // Loan simulator properties count endpoint
 Route::post('/loan-simulator/properties-count', function () {
-    $maxPrice = request()->input('maxPrice');
-    $count = Imovel::where('preco', '<=', $maxPrice)
-                  ->where('status', 'disponivel')
-                  ->count();
-    
+    $maxPrice = floatval(request()->input('maxPrice'));
+    $count = Imovel::where('preco', '<=', $maxPrice)->count();
+
     return response()->json(['count' => $count]);
 });
