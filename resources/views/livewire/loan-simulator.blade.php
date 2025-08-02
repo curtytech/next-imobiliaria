@@ -120,8 +120,6 @@
                     </div>
                 </div>
                 
-
-                
                 <!-- Chart -->
                 <div class="lg:col-span-1">
                     <div class="p-6 bg-white rounded-xl shadow-lg">
