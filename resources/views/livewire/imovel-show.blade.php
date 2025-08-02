@@ -23,7 +23,7 @@ mount(function ($id) {
         $this->loading = true;
         $this->error = null;
         
-        $this->imovel = Imovel::findOrFail($id);
+        $this->imovel = Imovel::with(['tipoImovel', 'statusImovel', 'corretor'])->findOrFail($id);
         
         // Set default message for contact form
         $this->contactForm['message'] = "Olá! Tenho interesse no imóvel: {$this->imovel->titulo}";
@@ -295,7 +295,7 @@ $propertyTypeLabel = computed(function () {
                                     Solicitar Informações
                                 </button>
                                 <button class="w-full py-3 px-4 border border-primary text-primary rounded-lg hover:bg-primary hover:text-white transition-colors font-semibold">
-                                    <x-whatsapp-icon class="inline w-4 h-4 mr-2" />
+                                    <x-lucide-message-circle class="inline w-4 h-4 mr-2" />
                                     WhatsApp
                                 </button>
                             </div>
@@ -357,9 +357,9 @@ $propertyTypeLabel = computed(function () {
                                 <div class="flex items-center justify-between">
                                     <span class="text-gray-600">Status</span>
                                     <span class="px-2 py-1 text-xs font-semibold rounded-full 
-                                        {{ $imovel->status === 'disponivel' ? 'bg-green-100 text-green-800' : 
-                                           ($imovel->status === 'vendido' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800') }}">
-                                        {{ ucfirst($imovel->status) }}
+                                        {{ $imovel->statusImovel?->nome === 'Disponível' ? 'bg-green-100 text-green-800' : 
+                                           ($imovel->statusImovel?->nome === 'Vendido' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800') }}">
+                                        {{ $imovel->statusImovel?->nome ?? 'N/A' }}
                                     </span>
                                 </div>
                             </div>
@@ -368,7 +368,7 @@ $propertyTypeLabel = computed(function () {
                         <!-- Location Card -->
                         <div class="bg-white rounded-xl shadow p-6">
                             <h3 class="text-lg font-bold text-gray-900 mb-4">Localização</h3>
-                            <div class="space-y-3 text-sm">
+                            <div class="space-y-3 text-sm mb-4">
                                 <div>
                                     <span class="text-gray-600">Endereço:</span>
                                     <p class="font-medium">{{ $imovel->endereco }}</p>
@@ -384,6 +384,22 @@ $propertyTypeLabel = computed(function () {
                                 <div>
                                     <span class="text-gray-600">CEP:</span>
                                     <p class="font-medium">{{ $imovel->cep }}</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Google Maps -->
+                            <div class="mt-4">
+                                <h4 class="text-md font-semibold text-gray-900 mb-2">Mapa</h4>
+                                <div class="relative w-full h-64 rounded-lg overflow-hidden border border-gray-200">
+                                    <iframe 
+                                        src="https://www.google.com/maps?q={{ urlencode($imovel->endereco . ', ' . $imovel->bairro . ', ' . $imovel->cidade . ', ' . $imovel->estado) }}&output=embed"
+                                        width="100%" 
+                                        height="100%" 
+                                        style="border:0;" 
+                                        allowfullscreen="" 
+                                        loading="lazy" 
+                                        referrerpolicy="no-referrer-when-downgrade">
+                                    </iframe>
                                 </div>
                             </div>
                         </div>
@@ -489,4 +505,4 @@ $propertyTypeLabel = computed(function () {
             @endif
         @endif
     </div>
-</main> 
+</main>

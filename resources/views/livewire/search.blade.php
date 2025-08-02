@@ -12,8 +12,15 @@ state([
     'priceMax' => '',
     'areaMin' => '',
     'areaMax' => '',
+    'areaUtilMin' => '',
+    'areaUtilMax' => '',
+    'terrenoMin' => '',
+    'terrenoMax' => '',
     'bedrooms' => '',
     'bathrooms' => '',
+    'garageSpaces' => '',
+    'neighborhood' => '',
+    'cep' => '',
     'viewMode' => 'grid',
     'sortBy' => 'recent',
     'propertiesFound' => 0,
@@ -28,6 +35,19 @@ mount(function () {
         // Receive URL parameters
         $this->location = request()->get('location', '');
         $this->propertyType = request()->get('propertyType', '');
+        $this->priceMin = request()->get('priceMin', '');
+        $this->priceMax = request()->get('priceMax', '');
+        $this->areaMin = request()->get('areaMin', '');
+        $this->areaMax = request()->get('areaMax', '');
+        $this->areaUtilMin = request()->get('areaUtilMin', '');
+        $this->areaUtilMax = request()->get('areaUtilMax', '');
+        $this->terrenoMin = request()->get('terrenoMin', '');
+        $this->terrenoMax = request()->get('terrenoMax', '');
+        $this->bedrooms = request()->get('bedrooms', '');
+        $this->bathrooms = request()->get('bathrooms', '');
+        $this->garageSpaces = request()->get('garageSpaces', '');
+        $this->neighborhood = request()->get('neighborhood', '');
+        $this->cep = request()->get('cep', '');
         $this->loadProperties();
     } catch (\Exception $e) {
         Log::error('Error mounting property search component: ' . $e->getMessage());
@@ -37,7 +57,10 @@ mount(function () {
 
 $buildQuery = function () {
     try {
-        $query = Imovel::query()->where('status', 'disponivel');
+        $query = Imovel::with(['tipoImovel', 'statusImovel', 'corretor'])
+            ->whereHas('statusImovel', function($q) {
+                $q->where('nome', 'Disponível');
+            });
 
         // Location filter (city, neighborhood, address)
         if (!empty($this->location)) {
@@ -49,9 +72,21 @@ $buildQuery = function () {
             });
         }
 
+        // Neighborhood filter
+        if (!empty($this->neighborhood)) {
+            $query->where('bairro', 'like', '%' . trim($this->neighborhood) . '%');
+        }
+
+        // CEP filter
+        if (!empty($this->cep)) {
+            $query->where('cep', 'like', '%' . trim($this->cep) . '%');
+        }
+
         // Property type filter
         if (!empty($this->propertyType)) {
-            $query->where('tipo', $this->propertyType);
+            $query->whereHas('tipoImovel', function($q) {
+                $q->where('nome', 'like', '%' . $this->propertyType . '%');
+            });
         }
 
         // Price range filter
@@ -70,6 +105,22 @@ $buildQuery = function () {
             $query->where('area', '<=', (float) $this->areaMax);
         }
 
+        // Useful area filter
+        if (!empty($this->areaUtilMin) && is_numeric($this->areaUtilMin)) {
+            $query->where('area_util', '>=', (float) $this->areaUtilMin);
+        }
+        if (!empty($this->areaUtilMax) && is_numeric($this->areaUtilMax)) {
+            $query->where('area_util', '<=', (float) $this->areaUtilMax);
+        }
+
+        // Land area filter
+        if (!empty($this->terrenoMin) && is_numeric($this->terrenoMin)) {
+            $query->where('terreno', '>=', (float) $this->terrenoMin);
+        }
+        if (!empty($this->terrenoMax) && is_numeric($this->terrenoMax)) {
+            $query->where('terreno', '<=', (float) $this->terrenoMax);
+        }
+
         // Bedrooms filter
         if (!empty($this->bedrooms) && is_numeric($this->bedrooms)) {
             $query->where('quartos', '>=', (int) $this->bedrooms);
@@ -78,6 +129,11 @@ $buildQuery = function () {
         // Bathrooms filter
         if (!empty($this->bathrooms) && is_numeric($this->bathrooms)) {
             $query->where('banheiros', '>=', (int) $this->bathrooms);
+        }
+
+        // Garage spaces filter
+        if (!empty($this->garageSpaces) && is_numeric($this->garageSpaces)) {
+            $query->where('vagas_garagem', '>=', (int) $this->garageSpaces);
         }
 
         // Sorting
@@ -263,6 +319,58 @@ $retryLoad = function () {
                             <option value="4">4+</option>
                         </select>
                     </div>
+
+                    <div>
+                        <label class="block mb-2 text-sm font-semibold">Vagas de Garagem</label>
+                        <select wire:model.live="garageSpaces"
+                            class="px-4 py-2 w-full bg-gray-50 rounded-lg border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary">
+                            <option value="">Qualquer</option>
+                            <option value="1">1+</option>
+                            <option value="2">2+</option>
+                            <option value="3">3+</option>
+                            <option value="4">4+</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block mb-2 text-sm font-semibold">Bairro</label>
+                        <input type="text" wire:model.live.debounce.500ms="neighborhood"
+                            class="px-4 py-2 w-full bg-gray-50 rounded-lg border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary"
+                            placeholder="Digite o bairro">
+                    </div>
+
+                    <div>
+                        <label class="block mb-2 text-sm font-semibold">CEP</label>
+                        <input type="text" wire:model.live.debounce.500ms="cep"
+                            class="px-4 py-2 w-full bg-gray-50 rounded-lg border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary"
+                            placeholder="Digite o CEP">
+                    </div>
+
+                    <div>
+                        <label class="block mb-2 text-sm font-semibold">Área Útil (m²)</label>
+                        <div class="flex items-center space-x-2">
+                            <input type="number" wire:model.live.debounce.500ms="areaUtilMin" min="0"
+                                class="px-2 py-1 w-1/2 bg-gray-50 rounded-lg border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary"
+                                placeholder="Mín">
+                            <span>-</span>
+                            <input type="number" wire:model.live.debounce.500ms="areaUtilMax" min="0"
+                                class="px-2 py-1 w-1/2 bg-gray-50 rounded-lg border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary"
+                                placeholder="Máx">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block mb-2 text-sm font-semibold">Terreno (m²)</label>
+                        <div class="flex items-center space-x-2">
+                            <input type="number" wire:model.live.debounce.500ms="terrenoMin" min="0"
+                                class="px-2 py-1 w-1/2 bg-gray-50 rounded-lg border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary"
+                                placeholder="Mín">
+                            <span>-</span>
+                            <input type="number" wire:model.live.debounce.500ms="terrenoMax" min="0"
+                                class="px-2 py-1 w-1/2 bg-gray-50 rounded-lg border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary"
+                                placeholder="Máx">
+                        </div>
+                    </div>
                 </form>
             </aside>
 
@@ -321,87 +429,7 @@ $retryLoad = function () {
                     <div
                         class="grid grid-cols-1 gap-6 {{ $viewMode === 'grid' ? 'sm:grid-cols-2 lg:grid-cols-3' : 'grid-cols-1' }}">
                         @foreach ($this->properties as $imovel)
-                            <div
-                                class="flex overflow-hidden flex-col bg-white rounded-xl shadow transition-shadow hover:shadow-lg">
-                                <div class="relative">
-                                    @if ($imovel->fotos && count($imovel->fotos) > 0)
-                                        <img src="{{ $imovel->fotos[0] }}" alt="{{ $imovel->titulo }}"
-                                            class="object-cover w-full h-44"
-                                            onerror="this.src='https://images.unsplash.com/photo-1580587771525-78b9dba3b914?q=80&w=400&auto=format&fit=crop'">
-                                    @else
-                                        <img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?q=80&w=400&auto=format&fit=crop"
-                                            alt="{{ $imovel->titulo }}" class="object-cover w-full h-44">
-                                    @endif
-
-                                    @if ($imovel->destaque)
-                                        <span
-                                            class="absolute top-3 left-3 px-3 py-1 text-xs font-bold text-white rounded-full bg-primary">
-                                            Destaque
-                                        </span>
-                                    @endif
-
-                                    <button
-                                        class="absolute top-3 right-3 p-1 bg-white rounded-full border text-primary border-primary hover:bg-primary hover:text-white transition-colors">
-                                        <x-lucide-heart class="w-5 h-5" />
-                                    </button>
-                                </div>
-
-                                <div class="flex flex-col flex-1 p-4">
-                                    <div class="flex gap-2 items-center mb-2">
-                                        <span class="text-xs text-gray-500">{{ ucfirst($imovel->tipo) }}</span>
-                                        <span class="text-xs text-gray-400">•</span>
-                                        <span class="text-xs text-gray-500">{{ $imovel->bairro }} -
-                                            {{ $imovel->cidade }}</span>
-                                    </div>
-
-                                    <h3 class="mb-1 text-lg font-bold line-clamp-2">{{ $imovel->titulo }}</h3>
-
-                                    <div class="mb-2 text-xl font-bold text-primary">
-                                        {{ $imovel->preco_formatado ?? 'Preço sob consulta' }}
-                                    </div>
-
-                                    <div class="flex gap-4 items-center mb-4 text-sm text-gray-600">
-                                        @if ($imovel->quartos)
-                                            <span class="flex gap-1 items-center">
-                                                <x-lucide-bed-double class="w-4 h-4" />
-                                                {{ $imovel->quartos }} Quartos
-                                            </span>
-                                        @endif
-
-                                        @if ($imovel->banheiros)
-                                            <span class="flex gap-1 items-center">
-                                                <x-lucide-bath class="w-4 h-4" />
-                                                {{ $imovel->banheiros }}
-                                                Banheiro{{ $imovel->banheiros > 1 ? 's' : '' }}
-                                            </span>
-                                        @endif
-
-                                        @if ($imovel->area)
-                                            <span class="flex gap-1 items-center">
-                                                <x-lucide-ruler class="w-4 h-4" />
-                                                {{ $imovel->area }}m²
-                                            </span>
-                                        @endif
-                                    </div>
-
-                                    <div class="flex gap-2 mt-auto">
-                                        <a href="{{ route('imovel.show', $imovel->id) }}"
-                                            class="flex-1 py-2 text-center font-semibold rounded-lg border transition-colors border-primary text-primary hover:bg-primary hover:text-white">
-                                            Ver detalhes
-                                        </a>
-                                        <button
-                                            class="flex-1 py-2 font-semibold rounded-lg border transition-colors border-primary text-primary hover:bg-primary hover:text-white">
-                                            Contato
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <div class="flex items-center p-4 border-t border-gray-100">
-                                    <img src="https://placehold.co/32x32/EFEFEF/777777?text=BR" alt="Corretor"
-                                        class="mr-2 w-8 h-8 rounded-full">
-                                    <span class="text-xs text-gray-700">{{ $imovel->corretor ?? 'Corretor' }}</span>
-                                </div>
-                            </div>
+                            @livewire('imovel-card', ['imovel' => $imovel], key($imovel->id))
                         @endforeach
                     </div>
 

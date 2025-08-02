@@ -17,6 +17,8 @@ class Imovel extends Model
         'tipo_id',
         'status_id',
         'preco',
+        'preco_iptu',
+        'preco_condominio',
         'area',
         'quartos',
         'banheiros',
@@ -27,6 +29,7 @@ class Imovel extends Model
         'estado',
         'pais',
         'cep',
+        'localizacao_maps',
         'caracteristicas',
         'fotos',
         'videos',
@@ -34,17 +37,20 @@ class Imovel extends Model
         'area_util',
         'terreno',
         'area_constr',
+        'corretor_id',
     ];
 
     protected $casts = [
         'preco' => 'decimal:2',
+        'preco_iptu' => 'decimal:2',
+        'preco_condominio' => 'decimal:2',
         'caracteristicas' => 'array',
         'fotos' => 'array',
         'videos' => 'array',
         'destaque' => 'boolean',
     ];
 
-    public function tipo()
+    public function tipoImovel()
     {
         return $this->belongsTo(TipoImovel::class, 'tipo_id');
     }
@@ -52,6 +58,11 @@ class Imovel extends Model
     public function statusImovel()
     {
         return $this->belongsTo(StatusImovel::class, 'status_id');
+    }
+
+    public function corretor()
+    {
+        return $this->belongsTo(User::class, 'corretor_id');
     }
 
     public function getPrecoFormatadoAttribute()
@@ -64,9 +75,21 @@ class Imovel extends Model
         return "{$this->endereco}, {$this->bairro}, {$this->cidade} - {$this->estado}, CEP: {$this->cep}";
     }
 
+    public function getImagemPrincipalAttribute()
+    {
+        return $this->fotos[0] ?? 'https://via.placeholder.com/400x250.png?text=Sem+Imagem';
+    }
+
+    public function getLocalizacaoAttribute()
+    {
+        return "{$this->bairro}, {$this->cidade}";
+    }
+
     public function scopeDisponiveis($query)
     {
-        return $query->where('status', 'disponivel');
+        return $query->whereHas('statusImovel', function($q) {
+            $q->where('nome', 'Disponível');
+        });
     }
 
     public function scopeDestaque($query)
