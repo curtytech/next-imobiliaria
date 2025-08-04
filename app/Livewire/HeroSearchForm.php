@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use Livewire\Component;
+use App\Models\TipoImovel;
 
 class HeroSearchForm extends Component
 {
@@ -26,6 +27,8 @@ class HeroSearchForm extends Component
 
     public function render()
     {
-        return view('livewire.hero-search-form');
+        return view('livewire.hero-search-form', [
+            'tipoImovel' => TipoImovel::all()
+        ]);
     }
 }

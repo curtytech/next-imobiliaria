@@ -2,6 +2,7 @@
 
 use function Livewire\Volt\{state, mount, computed, with};
 use App\Models\Imovel;
+use App\Models\TipoImovel;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Log;
 
@@ -233,6 +234,10 @@ $retryLoad = function () {
     $this->loadProperties();
 };
 
+with([
+    'tipoImovel' => TipoImovel::all()
+]);
+
 ?>
 
 <main>
@@ -262,10 +267,9 @@ $retryLoad = function () {
                         <select wire:model.live="propertyType"
                             class="px-4 py-2 w-full bg-gray-50 rounded-lg border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary">
                             <option value="">Todos</option>
-                            <option value="casa">Casa</option>
-                            <option value="apartamento">Apartamento</option>
-                            <option value="terreno">Terreno</option>
-                            <option value="comercial">Comercial</option>
+                            @foreach($tipoImovel as $tipo)
+                                <option value="{{ $tipo->id }}">{{ $tipo->nome }}</option>
+                            @endforeach
                         </select>
                     </div>
 

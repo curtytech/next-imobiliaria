@@ -9,7 +9,7 @@
                 <div class="absolute inset-0 bg-black/50"></div>
             </div>
             <div class="relative z-10 px-4 text-center">
-                <h1 class="mb-4 text-4xl font-extrabold drop-shadow-lg md:text-6xl">O seu imóvel dos sonhos em Magé</h1>
+                <!-- <h1 class="mb-4 text-4xl font-extrabold drop-shadow-lg md:text-6xl">O seu imóvel dos sonhos em Magé</h1> -->
                 <p class="mx-auto mb-8 max-w-3xl text-lg drop-shadow-md md:text-xl">Especializado em venda e locação de
                     imóveis residenciais e comerciais na cidade de Magé.</p>
                 <livewire:hero-search-form />
@@ -170,7 +170,7 @@
                             class="p-8 text-center bg-white rounded-xl shadow-lg transition-shadow duration-300 hover:shadow-xl group">
                             <img src="https://placehold.co/128x128/EFEFEF/777777?text=Foto" alt="Corretora Cristina Almeida"
                                 class="mx-auto mb-4 w-32 h-32 rounded-full border-4 border-white transition-colors duration-300 group-hover:border-primary">
-                            <h3 class="text-xl font-bold text-gray-800">Cristina Almeida</h3>
+                            <h3 class="text-xl font-bold text-gray-800">Cristina Almeida --</h3>
                             <p class="mb-4 font-semibold text-primary">CRECI-RJ 12345</p>
                             <p class="mb-4 text-gray-600">Fundadora e especialista em imóveis de alto padrão. Paixão por
                                 realizar sonhos.</p>
@@ -180,19 +180,24 @@
                             </a>
                         </div>
                         <!-- Agent Card 2 -->
-                        <div
-                            class="p-8 text-center bg-white rounded-xl shadow-lg transition-shadow duration-300 hover:shadow-xl group">
-                            <img src="https://placehold.co/128x128/EFEFEF/777777?text=Foto" alt="Corretor Carlos Silva"
-                                class="mx-auto mb-4 w-32 h-32 rounded-full border-4 border-white transition-colors duration-300 group-hover:border-primary">
-                            <h3 class="text-xl font-bold text-gray-800">Carlos Silva</h3>
-                            <p class="mb-4 font-semibold text-primary">CRECI-RJ 67890</p>
-                            <p class="mb-4 text-gray-600">Especialista em locações e novos empreendimentos. Agilidade é seu
-                                sobrenome.</p>
-                            <a href="#"
-                                class="inline-block px-6 py-2 font-semibold text-white bg-green-500 rounded-lg transition hover:bg-green-600">
-                                <i data-lucide="message-circle" class="inline-block mr-2 w-5 h-5"></i>WhatsApp
-                            </a>
-                        </div>
+                        @forelse ($corretores as $corretor)
+                            <div class="p-8 text-center bg-white rounded-xl shadow-lg transition-shadow duration-300 hover:shadow-xl group">
+                                <img src="{{ $corretor->foto ?? 'https://placehold.co/128x128/EFEFEF/777777?text=Foto' }}" 
+                                    alt="Corretor {{ $corretor->name }}" 
+                                    class="mx-auto mb-4 w-32 h-32 rounded-full border-4 border-white transition-colors duration-300 group-hover:border-primary">
+                                <h3 class="text-xl font-bold text-gray-800">{{ $corretor->name }} --</h3>
+                                <p class="mb-4 font-semibold text-primary">{{ $corretor->creci }}</p>
+                                <p class="mb-4 text-gray-600">Especialista em imóveis na região de Magé.</p>
+                                <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $corretor->celular) }}" 
+                                    class="inline-block px-6 py-2 font-semibold text-white bg-green-500 rounded-lg transition hover:bg-green-600">
+                                    <i data-lucide="message-circle" class="inline-block mr-2 w-5 h-5"></i>WhatsApp
+                                </a>
+                            </div>
+                        @empty
+                            <div class="col-span-3 p-8 text-center">
+                                <p class="text-gray-600">Nenhum corretor cadastrado no momento.</p>
+                            </div>
+                        @endforelse
                         <!-- Agent Card 3 -->
                         <div
                             class="p-8 text-center bg-white rounded-xl shadow-lg transition-shadow duration-300 hover:shadow-xl group">

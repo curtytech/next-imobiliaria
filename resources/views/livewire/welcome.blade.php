@@ -2,10 +2,16 @@
 
 use function Livewire\Volt\{state, layout};
 use App\Models\Imovel;
+use App\Models\TipoImovel;
+use App\Models\User;
 
 layout('components.layouts.app');
 
-state(['imovelCards' => fn () => Imovel::with(['tipoImovel', 'statusImovel', 'corretor'])->where('destaque', true)->limit(6)->get()]);
+state([
+    'imovelCards' => fn() => Imovel::with(['tipoImovel', 'statusImovel', 'corretor'])->where('destaque', true)->limit(6)->get(),
+    'corretores' => fn() => User::where('role', 'corretor')->get(),
+    'tipoImovel' => fn() => TipoImovel::all()
+]);
 
 ?>
 
@@ -17,7 +23,7 @@ state(['imovelCards' => fn () => Imovel::with(['tipoImovel', 'statusImovel', 'co
             <div class="absolute inset-0 bg-black/50"></div>
         </div>
         <div class="relative z-10 px-4 text-center">
-            <h1 class="mb-4 text-4xl font-extrabold drop-shadow-lg md:text-6xl">O seu imóvel dos sonhos em Magé</h1>
+            <!-- <h1 class="mb-4 text-4xl font-extrabold drop-shadow-lg md:text-6xl">O seu imóvel dos sonhos em Magé</h1> -->
             <p class="mx-auto mb-8 max-w-3xl text-lg drop-shadow-md md:text-xl">Especializado em venda e locação de
                 imóveis residenciais e comerciais na cidade de Magé.</p>
             <livewire:hero-search-form />
@@ -56,33 +62,33 @@ state(['imovelCards' => fn () => Imovel::with(['tipoImovel', 'statusImovel', 'co
             <!-- Bento Grid Start -->
             <div class="grid gap-8 md:grid-cols-4 bento-grid">
                 @if (count($imovelCards) >= 6)
-                    <!-- Primeira linha: 1 largo, 2 estreitos -->
-                    <div class="md:col-span-2 bento-card">
-                        @livewire('imovel-card', ['imovel' => $imovelCards[0]])
-                    </div>
-                    <div class="md:col-span-1 bento-card">
-                        @livewire('imovel-card', ['imovel' => $imovelCards[1]])
-                    </div>
-                    <div class="md:col-span-1 bento-card">
-                        @livewire('imovel-card', ['imovel' => $imovelCards[2]])
-                    </div>
-                    <!-- Segunda linha: 2 estreitos, 1 largo -->
-                    <div class="md:col-span-1 bento-card">
-                        @livewire('imovel-card', ['imovel' => $imovelCards[3]])
-                    </div>
-                    <div class="md:col-span-1 bento-card">
-                        @livewire('imovel-card', ['imovel' => $imovelCards[4]])
-                    </div>
-                    <div class="md:col-span-2 bento-card">
-                        @livewire('imovel-card', ['imovel' => $imovelCards[5]])
-                    </div>
+                <!-- Primeira linha: 1 largo, 2 estreitos -->
+                <div class="md:col-span-2 bento-card">
+                    @livewire('imovel-card', ['imovel' => $imovelCards[0]])
+                </div>
+                <div class="md:col-span-1 bento-card">
+                    @livewire('imovel-card', ['imovel' => $imovelCards[1]])
+                </div>
+                <div class="md:col-span-1 bento-card">
+                    @livewire('imovel-card', ['imovel' => $imovelCards[2]])
+                </div>
+                <!-- Segunda linha: 2 estreitos, 1 largo -->
+                <div class="md:col-span-1 bento-card">
+                    @livewire('imovel-card', ['imovel' => $imovelCards[3]])
+                </div>
+                <div class="md:col-span-1 bento-card">
+                    @livewire('imovel-card', ['imovel' => $imovelCards[4]])
+                </div>
+                <div class="md:col-span-2 bento-card">
+                    @livewire('imovel-card', ['imovel' => $imovelCards[5]])
+                </div>
                 @else
-                    <!-- Grid adaptável para menos de 6 cards -->
-                    @foreach ($imovelCards as $index => $card)
-                        <div class="md:col-span-{{ $index === 0 || $index === 5 ? '2' : '1' }} bento-card">
-                            @livewire('imovel-card', ['imovel' => $card])
-                        </div>
-                    @endforeach
+                <!-- Grid adaptável para menos de 6 cards -->
+                @foreach ($imovelCards as $index => $card)
+                <div class="md:col-span-{{ $index === 0 || $index === 5 ? '2' : '1' }} bento-card">
+                    @livewire('imovel-card', ['imovel' => $card])
+                </div>
+                @endforeach
                 @endif
             </div>
             <!-- Bento Grid End -->
@@ -173,48 +179,24 @@ state(['imovelCards' => fn () => Imovel::with(['tipoImovel', 'statusImovel', 'co
             </div>
             <div class="relative">
                 <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-                    <!-- Agent Card 1 -->
-                    <div
-                        class="p-8 text-center bg-white rounded-xl shadow-lg transition-shadow duration-300 hover:shadow-xl group">
-                        <img src="https://placehold.co/128x128/EFEFEF/777777?text=Foto" alt="Corretora Cristina Almeida"
+                    @forelse ($corretores as $corretor)
+                    <div class="p-8 text-center bg-white rounded-xl shadow-lg transition-shadow duration-300 hover:shadow-xl group">
+                        <img src="{{ $corretor->foto ?? 'https://placehold.co/128x128/EFEFEF/777777?text=Foto' }}"
+                            alt="Corretor {{ $corretor->name }}"
                             class="mx-auto mb-4 w-32 h-32 rounded-full border-4 border-white transition-colors duration-300 group-hover:border-primary">
-                        <h3 class="text-xl font-bold text-gray-800">Cristina Almeida</h3>
-                        <p class="mb-4 font-semibold text-primary">CRECI-RJ 12345</p>
-                        <p class="mb-4 text-gray-600">Fundadora e especialista em imóveis de alto padrão. Paixão por
-                            realizar sonhos.</p>
-                        <a href="#"
+                        <h3 class="text-xl font-bold text-gray-800">{{ $corretor->name }} </h3>
+                        <p class="mb-4 font-semibold text-primary">{{ $corretor->creci }}</p>
+                        <p class="mb-4 text-gray-600">{{ $corretor->descricao }}</p>
+                        <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $corretor->celular) }}" target="_blank" 
                             class="inline-block px-6 py-2 font-semibold text-white bg-green-500 rounded-lg transition hover:bg-green-600">
                             <i data-lucide="message-circle" class="inline-block mr-2 w-5 h-5"></i>WhatsApp
                         </a>
                     </div>
-                    <!-- Agent Card 2 -->
-                    <div
-                        class="p-8 text-center bg-white rounded-xl shadow-lg transition-shadow duration-300 hover:shadow-xl group">
-                        <img src="https://placehold.co/128x128/EFEFEF/777777?text=Foto" alt="Corretor Carlos Silva"
-                            class="mx-auto mb-4 w-32 h-32 rounded-full border-4 border-white transition-colors duration-300 group-hover:border-primary">
-                        <h3 class="text-xl font-bold text-gray-800">Carlos Silva</h3>
-                        <p class="mb-4 font-semibold text-primary">CRECI-RJ 67890</p>
-                        <p class="mb-4 text-gray-600">Especialista em locações e novos empreendimentos. Agilidade é seu
-                            sobrenome.</p>
-                        <a href="#"
-                            class="inline-block px-6 py-2 font-semibold text-white bg-green-500 rounded-lg transition hover:bg-green-600">
-                            <i data-lucide="message-circle" class="inline-block mr-2 w-5 h-5"></i>WhatsApp
-                        </a>
+                    @empty
+                    <div class="col-span-3 p-8 text-center">
+                        <p class="text-gray-600">Nenhum corretor cadastrado no momento.</p>
                     </div>
-                    <!-- Agent Card 3 -->
-                    <div
-                        class="p-8 text-center bg-white rounded-xl shadow-lg transition-shadow duration-300 hover:shadow-xl group">
-                        <img src="https://placehold.co/128x128/EFEFEF/777777?text=Foto" alt="Corretora Ana Pereira"
-                            class="mx-auto mb-4 w-32 h-32 rounded-full border-4 border-white transition-colors duration-300 group-hover:border-primary">
-                        <h3 class="text-xl font-bold text-gray-800">Ana Pereira</h3>
-                        <p class="mb-4 font-semibold text-primary">CRECI-RJ 24680</p>
-                        <p class="mb-4 text-gray-600">Focada em terrenos e oportunidades de investimento na região de
-                            Magé.</p>
-                        <a href="#"
-                            class="inline-block px-6 py-2 font-semibold text-white bg-green-500 rounded-lg transition hover:bg-green-600">
-                            <i data-lucide="message-circle" class="inline-block mr-2 w-5 h-5"></i>WhatsApp
-                        </a>
-                    </div>
+                    @endforelse
                 </div>
                 <!-- Carousel Navigation -->
                 <button

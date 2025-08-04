@@ -15,10 +15,9 @@
             <select id="search-type" wire:model="propertyKind"
                 class="w-full pl-4 pr-8 py-3 rounded-lg text-gray-800 bg-white focus:outline-none focus:ring-2 focus:ring-primary">
                 <option value="">Tipo</option>
-                <option value="casa">Casa</option>
-                <option value="apartamento">Apartamento</option>
-                <option value="terreno">Terreno</option>
-                <option value="comercial">Comercial</option>
+                @foreach($tipoImovel as $tipo)
+                    <option value="{{ $tipo->id }}">{{ $tipo->nome }}</option>
+                @endforeach
             </select>
         </div>
         <div class="md:col-span-2 lg:col-span-2">

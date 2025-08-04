@@ -37,7 +37,7 @@ class Imovel extends Model
         'area_util',
         'terreno',
         'area_constr',
-        'corretor_id',
+        'user_id',
     ];
 
     protected $casts = [
@@ -62,7 +62,7 @@ class Imovel extends Model
 
     public function corretor()
     {
-        return $this->belongsTo(User::class, 'corretor_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function getPrecoFormatadoAttribute()
@@ -108,25 +108,37 @@ class Imovel extends Model
             return [];
         }
 
-        return collect($this->videos)->map(function ($videoUrl) {
+        return collect($this->videos)->map(function ($video) {
+            // Se o vídeo é um array com 'url', extrair a URL
+            $videoUrl = is_array($video) ? ($video['url'] ?? null) : $video;
+            
+            if (!$videoUrl) {
+                return null;
+            }
+            
             return $this->extractYouTubeId($videoUrl);
         })->filter()->toArray();
     }
 
     public function extractYouTubeId($url)
     {
+        // Verificar se $url é uma string
+        if (!is_string($url)) {
+            return null;
+        }
+        
         $patterns = [
             '/youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)/',
             '/youtu\.be\/([a-zA-Z0-9_-]+)/',
             '/youtube\.com\/embed\/([a-zA-Z0-9_-]+)/',
         ];
-
+    
         foreach ($patterns as $pattern) {
             if (preg_match($pattern, $url, $matches)) {
                 return $matches[1];
             }
         }
-
+    
         return null;
     }
 }
