@@ -15,6 +15,9 @@
     {{ $slot }}
 
     <x-footer />
+    
+    <!-- Botão flutuante do WhatsApp -->
+    <x-whatsapp-float />
 </body>
 
 </html>
