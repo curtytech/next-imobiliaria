@@ -187,7 +187,7 @@ $propertyTypeLabel = computed(function () {
                             <div class="text-3xl font-bold text-primary mb-1">
                                 {{ $imovel->preco_formatado ?? 'Preço sob consulta' }}
                             </div>
-                            <div class="text-sm text-gray-500">Código: #{{ $imovel->id }}</div>
+                            <!-- <div class="text-sm text-gray-500">Código: #{{ $imovel->id }}</div> -->
                         </div>
                     </div>
                 </div>
@@ -294,10 +294,12 @@ $propertyTypeLabel = computed(function () {
                                     <x-lucide-phone class="inline w-4 h-4 mr-2" />
                                     Solicitar Informações
                                 </button>
-                                <button class="w-full py-3 px-4 border border-primary text-primary rounded-lg hover:bg-primary hover:text-white transition-colors font-semibold">
+                                <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $imovel->corretor?->telefone ?? '') }}" 
+                                   target="_blank"
+                                   class="w-full py-3 px-4 border border-primary text-primary rounded-lg hover:bg-primary hover:text-white transition-colors font-semibold inline-flex items-center justify-center">
                                     <x-lucide-message-circle class="inline w-4 h-4 mr-2" />
                                     WhatsApp
-                                </button>
+                                </a>
                             </div>
                         </div>
 
