@@ -4,8 +4,9 @@
         <div class="flex justify-between items-center py-4">
             <!-- Logo -->
             <a href="/" class="flex items-center space-x-2">
-                <span class="flex justify-center items-center w-10 h-10 text-2xl font-bold text-white rounded-md bg-primary">NX</span>
-                <span class="hidden text-xl font-bold text-gray-800 sm:block">Next Imobiliária</span>
+                <!-- <span class="flex justify-center items-center w-10 h-10 text-2xl font-bold text-white rounded-md bg-primary">NX</span> -->
+                <!-- <span class="hidden text-xl font-bold text-gray-800 sm:block">Next Imobiliária</span> -->
+                <img src="{{ asset('img/logo_mcboutique.png') }}" alt="Mc Boutique" class="h-10 w-auto">
             </a>
             <!-- Desktop Navigation -->
             <nav class="hidden items-center space-x-6 lg:flex">
@@ -26,4 +27,4 @@
             </div>
         </div>
     </div>
-</header> 
+</header>

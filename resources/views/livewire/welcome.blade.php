@@ -24,8 +24,8 @@ state([
         </div>
         <div class="relative z-10 px-4 text-center">
             <!-- <h1 class="mb-4 text-4xl font-extrabold drop-shadow-lg md:text-6xl">O seu imóvel dos sonhos em Magé</h1> -->
-            <p class="mx-auto mb-8 max-w-3xl text-lg drop-shadow-md md:text-xl">Especializado em venda e locação de
-                imóveis residenciais e comerciais na cidade de Magé.</p>
+            <!-- <p class="mx-auto mb-8 max-w-3xl text-lg drop-shadow-md md:text-xl">Especializado em venda e locação de
+                imóveis residenciais e comerciais na cidade de Magé.</p> -->
             <livewire:hero-search-form />
         </div>
     </section>
