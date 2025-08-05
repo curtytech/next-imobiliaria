@@ -9,6 +9,8 @@ layout('components.layouts.app');
 
 state([
     'imovelCards' => fn() => Imovel::with(['tipoImovel', 'statusImovel', 'corretor'])->where('destaque', true)->limit(6)->get(),
+    'imoveisDisponiveis' => fn() => Imovel::where('status_id', 1)->orderBy('created_at', 'desc')->limit(15)->get(),
+    'imovelCount' => fn() => Imovel::count(),
     'corretores' => fn() => User::where('role', 'corretor')->get(),
     'tipoImovel' => fn() => TipoImovel::all()
 ]);
@@ -97,35 +99,22 @@ state([
     <!-- Filter Chips Section -->
     <section class="py-12 bg-white">
         <div class="container px-4 mx-auto">
-            <h2 class="mb-4 text-2xl font-bold text-gray-800">+ de 171 Imóveis</h2>
+            <h2 class="mb-4 text-2xl font-bold text-gray-800">+ de {{ $imovelCount - 1 }} Imóveis</h2>
             <p class="mb-6 text-gray-600">Para Comprar ou Alugar, são várias opções de escolha em diversos bairros</p>
             <div class="flex flex-wrap gap-3">
-                <button class="px-4 py-2 bg-gray-100 rounded-full transition hover:bg-primary hover:text-white">Casa à
-                    venda em Centro</button>
-                <button
-                    class="px-4 py-2 bg-gray-100 rounded-full transition hover:bg-primary hover:text-white">Apartamento
-                    à venda em Flexeiras</button>
-                <button class="px-4 py-2 bg-gray-100 rounded-full transition hover:bg-primary hover:text-white">Casa à
-                    venda em Barbuda</button>
-                <button class="px-4 py-2 bg-gray-100 rounded-full transition hover:bg-primary hover:text-white">Sítio à
-                    venda em Vale das Pedrinhas</button>
-                <button class="px-4 py-2 bg-gray-100 rounded-full transition hover:bg-primary hover:text-white">Casa à
-                    venda em Nova Marília</button>
-                <button class="px-4 py-2 bg-gray-100 rounded-full transition hover:bg-primary hover:text-white">Casa à
-                    venda em Cascata</button>
-                <button
-                    class="px-4 py-2 bg-gray-100 rounded-full transition hover:bg-primary hover:text-white">Apartamento
-                    à venda em Centro</button>
-                <button class="px-4 py-2 bg-gray-100 rounded-full transition hover:bg-primary hover:text-white">Terreno
-                    à venda em Flexeiras</button>
-                <button
-                    class="px-4 py-2 bg-gray-100 rounded-full transition hover:bg-primary hover:text-white">Loja/Comercial
-                    em Centro</button>
+
+                @foreach ($imoveisDisponiveis as $imovel)
+                <a href="/imovel/{{$imovel->id}}" class="cursor-pointer">
+                    <span class="px-4 py-2 rounded-full bg-secondary text-white font-semibold hover:bg-primary inline-block cursor-pointer">
+                        {{ $imovel->titulo }}
+                    </span>
+                </a>
+                @endforeach
             </div>
         </div>
     </section>
     <!-- Imóveis por Bairro Section -->
-    <section class="py-12 bg-gray-50">
+    <!-- <section class="py-12 bg-gray-50">
         <div class="container px-4 mx-auto">
             <h2 class="mb-8 text-2xl font-bold text-gray-800">Imóveis disponíveis por bairro</h2>
             <div class="grid grid-cols-2 gap-6 md:grid-cols-3 lg:grid-cols-6">
@@ -167,7 +156,7 @@ state([
                 </div>
             </div>
         </div>
-    </section>
+    </section> -->
     <!-- Loan Simulator Section -->
     <livewire:loan-simulator />
     <!-- Agents Section -->
@@ -187,7 +176,7 @@ state([
                         <h3 class="text-xl font-bold text-gray-800">{{ $corretor->name }} </h3>
                         <p class="mb-4 font-semibold text-primary">{{ $corretor->creci }}</p>
                         <p class="mb-4 text-gray-600">{{ $corretor->descricao }}</p>
-                        <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $corretor->celular) }}" target="_blank" 
+                        <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $corretor->celular) }}" target="_blank"
                             class="inline-block px-6 py-2 font-semibold text-white bg-green-500 rounded-lg transition hover:bg-green-600">
                             <i data-lucide="message-circle" class="inline-block mr-2 w-5 h-5"></i>WhatsApp
                         </a>

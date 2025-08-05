@@ -135,14 +135,14 @@
                 <!-- Sliders -->
                 <div class="order-1 flex-1 max-w-lg mx-auto">
                     <div class="mb-6">
-                        <label for="propertyValue" class="block mb-2  text-lg font-semibold text-primary text-center">Preço do Imóvel</label>
+                        <label for="propertyValue" class="block mb-2 text-lg font-bold text-primary text-center">Preço do Imóvel</label>
                         <input type="range" id="propertyValue" min="50000" max="2000000" step="10000"
                             x-model.number="propertyValue" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider">
                         <p class="mt-2 text-xl font-bold text-center text-primary"
                             x-text="formatCurrency(propertyValue)"></p>
                     </div>
                     <div class="mb-6">
-                        <label for="downPaymentPercent" class="block mb-2 font-semibold text-primary text-lg text-center">Entrada</label>
+                        <label for="downPaymentPercent" class="block mb-2 font-bold text-primary text-lg text-center">Entrada</label>
                         <input type="range" id="downPaymentPercent" min="10" max="80" step="5"
                             x-model.number="downPaymentPercent" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider">
                         <p class="mt-2 text-xl font-bold text-center text-primary"
@@ -151,13 +151,13 @@
                             x-text="formatCurrency(downPaymentValue)"></p>
                     </div>
                     <div class="mb-6">
-                        <label for="loanTerm" class="block mb-2 font-semibold text-primary text-lg text-center">Tempo de Financiamento</label>
+                        <label for="loanTerm" class="block mb-2 font-bold text-primary text-lg text-center">Tempo de Financiamento</label>
                         <input type="range" id="loanTerm" min="5" max="35" step="1"
                             x-model.number="loanTerm" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider">
                         <p class="mt-2 text-xl font-bold text-center text-primary" x-text="loanTerm + ' anos'"></p>
                     </div>
                     <div>
-                        <label for="interestRate" class="block mb-2 font-semibold text-primary text-lg text-center">Taxa de Juros</label>
+                        <label for="interestRate" class="block mb-2 font-bold text-primary text-lg text-center">Taxa de Juros</label>
                         <input type="range" id="interestRate" min="6" max="15" step="0.1"
                             x-model.number="interestRate" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider">
                         <p class="mt-2 text-xl font-bold text-center text-primary" x-text="interestRate.toFixed(1) + '% ao ano'"></p>
