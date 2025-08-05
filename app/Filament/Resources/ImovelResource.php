@@ -313,7 +313,7 @@ class ImovelResource extends Resource
                     ->searchable()
                     ->sortable(),
 
-                TextColumn::make('tipo.nome')
+                TextColumn::make('tipoImovel.nome')
                     ->label('Tipo')
                     ->sortable(),
 
@@ -356,22 +356,13 @@ class ImovelResource extends Resource
                     ->sortable(),
             ])
             ->filters([
-                SelectFilter::make('tipo')
+                SelectFilter::make('tipo_id')
                     ->label('Tipo')
-                    ->options([
-                        'casa' => 'Casa',
-                        'apartamento' => 'Apartamento',
-                        'terreno' => 'Terreno',
-                        'comercial' => 'Comercial',
-                    ]),
+                    ->relationship('tipoImovel', 'nome'),
 
-                SelectFilter::make('status')
+                SelectFilter::make('status_id')
                     ->label('Status')
-                    ->options([
-                        'disponivel' => 'Disponível',
-                        'vendido' => 'Vendido',
-                        'alugado' => 'Alugado',
-                    ]),
+                    ->relationship('statusImovel', 'nome'),
 
                 TernaryFilter::make('destaque')
                     ->label('Destaque'),

@@ -188,12 +188,12 @@ state([
                     @endforelse
                 </div>
                 <!-- Carousel Navigation -->
-                <button
+                {{-- <button
                     class="absolute left-0 top-1/2 p-2 bg-white rounded-full border border-gray-300 shadow transition -translate-y-1/2 hover:bg-primary hover:text-white lg:-left-12"
                     aria-label="Anterior"><i data-lucide="arrow-left"></i></button>
                 <button
                     class="absolute right-0 top-1/2 p-2 bg-white rounded-full border border-gray-300 shadow transition -translate-y-1/2 hover:bg-primary hover:text-white lg:-right-12"
-                    aria-label="Próximo"><i data-lucide="arrow-right"></i></button>
+                    aria-label="Próximo"><i data-lucide="arrow-right"></i></button> --}}
             </div>
         </div>
     </section>
