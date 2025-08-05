@@ -177,8 +177,9 @@ state([
                         <p class="mb-4 font-semibold text-primary">{{ $corretor->creci }}</p>
                         <p class="mb-4 text-gray-600">{{ $corretor->descricao }}</p>
                         <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $corretor->celular) }}" target="_blank"
-                            class="inline-block px-6 py-2 font-semibold text-white bg-green-500 rounded-lg transition hover:bg-green-600">
-                            <i data-lucide="message-circle" class="inline-block mr-2 w-5 h-5"></i>WhatsApp
+                            class="inline-flex items-center px-6 py-2 font-semibold text-white bg-green-500 rounded-lg transition hover:bg-green-600">
+                            <x-whatsapp />
+                            WhatsApp
                         </a>
                     </div>
                     @empty
@@ -194,7 +195,6 @@ state([
                     aria-label="Anterior"><i data-lucide="arrow-left"></i></button>
                 <button
                     class="absolute right-0 top-1/2 p-2 bg-white rounded-full border border-gray-300 shadow transition -translate-y-1/2 hover:bg-primary hover:text-white lg:-right-12"
-                    aria-label="Próximo"><i data-lucide="arrow-right"></i></button> --}}
                     aria-label="Próximo"><i data-lucide="arrow-right"></i></button> --}}
             </div>
         </div>
