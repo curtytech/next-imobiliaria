@@ -74,7 +74,7 @@ class ImovelResource extends Resource
 
                         Select::make('tipo_id')
                             ->label('Tipo de Imóvel')
-                            ->relationship('tipo', 'nome')
+                            ->relationship('tipoImovel', 'nome')
                             ->required(),
 
                         Select::make('status_id')
@@ -83,11 +83,10 @@ class ImovelResource extends Resource
                             ->required()
                             ->default(1),
 
-                        Select::make('status_id')
+                        Select::make('user_id')
                             ->label('Corretor Responsável')
-                            ->relationship('statusImovel', 'nome')
-                            ->required()
-                            ->default(1),
+                            ->relationship('corretor', 'name')
+                            ->required(),
 
                         Toggle::make('destaque')
                             ->label('Destaque')
@@ -313,7 +312,7 @@ class ImovelResource extends Resource
                     ->searchable()
                     ->sortable(),
 
-                TextColumn::make('tipo.nome')
+                TextColumn::make('tipoImovel.nome')
                     ->label('Tipo')
                     ->sortable(),
 
@@ -356,22 +355,13 @@ class ImovelResource extends Resource
                     ->sortable(),
             ])
             ->filters([
-                SelectFilter::make('tipo')
+                SelectFilter::make('tipo_id')
                     ->label('Tipo')
-                    ->options([
-                        'casa' => 'Casa',
-                        'apartamento' => 'Apartamento',
-                        'terreno' => 'Terreno',
-                        'comercial' => 'Comercial',
-                    ]),
+                    ->relationship('tipoImovel', 'nome'),
 
-                SelectFilter::make('status')
+                SelectFilter::make('status_id')
                     ->label('Status')
-                    ->options([
-                        'disponivel' => 'Disponível',
-                        'vendido' => 'Vendido',
-                        'alugado' => 'Alugado',
-                    ]),
+                    ->relationship('statusImovel', 'nome'),
 
                 TernaryFilter::make('destaque')
                     ->label('Destaque'),

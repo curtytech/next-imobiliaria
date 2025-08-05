@@ -79,7 +79,11 @@ $buildQuery = function () {
 
         // CEP filter
         if (!empty($this->cep)) {
-            $query->where('cep', 'like', '%' . trim($this->cep) . '%');
+            $cepLimpo = preg_replace('/[^0-9]/', '', trim($this->cep));
+            $query->where(function($q) use ($cepLimpo) {
+                $q->where('cep', 'like', '%' . $cepLimpo . '%')
+                  ->orWhereRaw('REPLACE(cep, "-", "") LIKE ?', ['%' . $cepLimpo . '%']);
+            });
         }
 
         // Property type filter
@@ -343,7 +347,8 @@ $retryLoad = function () {
                         <label class="block mb-2 text-sm font-semibold">CEP</label>
                         <input type="text" wire:model.live.debounce.500ms="cep"
                             class="px-4 py-2 w-full bg-gray-50 rounded-lg border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary"
-                            placeholder="Digite o CEP">
+                            placeholder="Ex: 25900-000 ou 25900000"
+                            maxlength="9">
                     </div>
 
                     <div>

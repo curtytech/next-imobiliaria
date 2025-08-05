@@ -62,7 +62,7 @@ class Imovel extends Model
 
     public function corretor()
     {
-        return $this->belongsTo(User::class, 'corretor_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function getPrecoFormatadoAttribute()
@@ -77,7 +77,30 @@ class Imovel extends Model
 
     public function getImagemPrincipalAttribute()
     {
-        return $this->fotos[0] ?? 'https://via.placeholder.com/400x250.png?text=Sem+Imagem';
+        if (!empty($this->fotos) && isset($this->fotos[0])) {
+            $foto = $this->fotos[0];
+            // Se a foto não começar com http, assumir que é um caminho local
+            if (!str_starts_with($foto, 'http')) {
+                return asset('storage/' . $foto);
+            }
+            return $foto;
+        }
+        return 'https://via.placeholder.com/400x250.png?text=Sem+Imagem';
+    }
+
+    public function getFotosProcessadasAttribute()
+    {
+        if (!$this->fotos) {
+            return [];
+        }
+
+        return collect($this->fotos)->map(function ($foto) {
+            // Se a foto não começar com http, assumir que é um caminho local
+            if (!str_starts_with($foto, 'http')) {
+                return asset('storage/' . $foto);
+            }
+            return $foto;
+        })->toArray();
     }
 
     public function getLocalizacaoAttribute()
@@ -87,7 +110,7 @@ class Imovel extends Model
 
     public function scopeDisponiveis($query)
     {
-        return $query->whereHas('statusImovel', function($q) {
+        return $query->whereHas('statusImovel', function ($q) {
             $q->where('nome', 'Disponível');
         });
     }
@@ -115,9 +138,17 @@ class Imovel extends Model
 
     public function extractYouTubeId($url)
     {
+        // Garantir que $url é uma string
+        if (!is_string($url)) {
+            return null;
+        }
+
         $patterns = [
-            '/youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)/',
+            // Padrão para youtube.com/watch?v=ID (com ou sem parâmetros adicionais)
+            '/youtube\.com\/watch\?.*v=([a-zA-Z0-9_-]+)/',
+            // Padrão para youtu.be/ID (com ou sem parâmetros adicionais)
             '/youtu\.be\/([a-zA-Z0-9_-]+)/',
+            // Padrão para youtube.com/embed/ID
             '/youtube\.com\/embed\/([a-zA-Z0-9_-]+)/',
         ];
 

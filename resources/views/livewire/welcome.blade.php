@@ -183,8 +183,9 @@ state(['imovelCards' => fn () => Imovel::with(['tipoImovel', 'statusImovel', 'co
                         <p class="mb-4 text-gray-600">Fundadora e especialista em imóveis de alto padrão. Paixão por
                             realizar sonhos.</p>
                         <a href="#"
-                            class="inline-block px-6 py-2 font-semibold text-white bg-green-500 rounded-lg transition hover:bg-green-600">
-                            <i data-lucide="message-circle" class="inline-block mr-2 w-5 h-5"></i>WhatsApp
+                            class="inline-flex items-center px-6 py-2 font-semibold text-white bg-green-500 rounded-lg transition hover:bg-green-600">                              
+                            <x-whatsapp />
+                            <span>WhatsApp</span>
                         </a>
                     </div>
                     <!-- Agent Card 2 -->
@@ -197,8 +198,9 @@ state(['imovelCards' => fn () => Imovel::with(['tipoImovel', 'statusImovel', 'co
                         <p class="mb-4 text-gray-600">Especialista em locações e novos empreendimentos. Agilidade é seu
                             sobrenome.</p>
                         <a href="#"
-                            class="inline-block px-6 py-2 font-semibold text-white bg-green-500 rounded-lg transition hover:bg-green-600">
-                            <i data-lucide="message-circle" class="inline-block mr-2 w-5 h-5"></i>WhatsApp
+                            class="inline-flex items-center px-6 py-2 font-semibold text-white bg-green-500 rounded-lg transition hover:bg-green-600">                                
+                            <x-whatsapp />
+                            <span>WhatsApp</span>
                         </a>
                     </div>
                     <!-- Agent Card 3 -->
@@ -211,18 +213,19 @@ state(['imovelCards' => fn () => Imovel::with(['tipoImovel', 'statusImovel', 'co
                         <p class="mb-4 text-gray-600">Focada em terrenos e oportunidades de investimento na região de
                             Magé.</p>
                         <a href="#"
-                            class="inline-block px-6 py-2 font-semibold text-white bg-green-500 rounded-lg transition hover:bg-green-600">
-                            <i data-lucide="message-circle" class="inline-block mr-2 w-5 h-5"></i>WhatsApp
+                            class="inline-flex items-center px-6 py-2 font-semibold text-white bg-green-500 rounded-lg transition hover:bg-green-600">                                
+                            <x-whatsapp />
+                            <span>WhatsApp</span>
                         </a>
                     </div>
                 </div>
                 <!-- Carousel Navigation -->
-                <button
+                {{-- <button
                     class="absolute left-0 top-1/2 p-2 bg-white rounded-full border border-gray-300 shadow transition -translate-y-1/2 hover:bg-primary hover:text-white lg:-left-12"
                     aria-label="Anterior"><i data-lucide="arrow-left"></i></button>
                 <button
                     class="absolute right-0 top-1/2 p-2 bg-white rounded-full border border-gray-300 shadow transition -translate-y-1/2 hover:bg-primary hover:text-white lg:-right-12"
-                    aria-label="Próximo"><i data-lucide="arrow-right"></i></button>
+                    aria-label="Próximo"><i data-lucide="arrow-right"></i></button> --}}
             </div>
         </div>
     </section>
