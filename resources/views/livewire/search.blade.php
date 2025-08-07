@@ -246,7 +246,17 @@ with([
 
 <main>
     <div class="min-h-screen bg-gray-50">
-        <div class="container flex flex-col gap-8 px-4 py-8 mx-auto lg:flex-row">
+        <div class="container px-4 py-8 mx-auto">
+            <!-- Breadcrumb -->
+            @livewire('breadcrumb', [
+                'items' => [
+                    ['label' => 'Início', 'url' => route('welcome')],
+                    ['label' => 'Buscar Imóveis', 'active' => true]
+                ]
+            ])
+        </div>
+        
+        <div class="container flex flex-col gap-8 px-4 pb-8 mx-auto lg:flex-row">
             <!-- Sidebar Filters -->
             <aside class="p-6 mb-8 w-full bg-white rounded-xl shadow lg:w-64 lg:mb-0">
                 <div class="flex items-center justify-between mb-4">

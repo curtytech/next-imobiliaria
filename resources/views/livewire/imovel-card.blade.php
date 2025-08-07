@@ -7,9 +7,9 @@
                     Destaque
                 </span>
             @endif
-            <span class="absolute top-3 right-3 p-1 bg-white rounded-full border text-primary border-primary">
+            {{-- <span class="absolute top-3 right-3 p-1 bg-white rounded-full border text-primary border-primary">
                 <i data-lucide="heart" class="w-5 h-5"></i>
-            </span>
+            </span> --}}
         </div>
         <div class="flex flex-col flex-1 p-4">
             <div class="flex gap-2 items-center mb-2">

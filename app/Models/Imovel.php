@@ -138,8 +138,13 @@ class Imovel extends Model
 
     public function extractYouTubeId($url)
     {
+        // Lidar com ambos os formatos: string simples ou array com chave 'url'
+        if (is_array($url)) {
+            $url = $url['url'] ?? '';
+        }
+        
         // Garantir que $url é uma string
-        if (!is_string($url)) {
+        if (!is_string($url) || empty($url)) {
             return null;
         }
 

@@ -264,15 +264,20 @@ class ImovelSeeder extends Seeder
         foreach ($imoveis as $imovel) {
             $tipo = TipoImovel::where('nome', ucfirst($imovel['tipo']))->first();
             $status = StatusImovel::whereRaw('LOWER(nome) = ?', [strtolower($imovel['status'])])->first();
+
+            if (!$tipo) {
+                $tipo = TipoImovel::first();
+            }
             if (!$status) {
                 $status = StatusImovel::first();
             }
-            Imovel::create([
+
+            Imovel::factory()->create([
                 'user_id' => 1,
                 'titulo' => $imovel['titulo'],
                 'descricao' => $imovel['descricao'],
-                'tipo_id' => 1,
-                'status_id' => 1,
+                'tipo_id' => $tipo->id,
+                'status_id' => $status->id,
                 'preco' => $imovel['preco'],
                 'preco_iptu' => $imovel['preco_iptu'] ?? null,
                 'preco_condominio' => $imovel['preco_condominio'] ?? null,
@@ -288,9 +293,9 @@ class ImovelSeeder extends Seeder
                 'cep' => $imovel['cep'],
                 'caracteristicas' => $imovel['caracteristicas'],
                 'fotos' => $imovel['fotos'],
-                'videos' => $imovel['videos'] ?? [],
+                // 'videos' => $imovel['videos'] ?? [],
                 'destaque' => $imovel['destaque'],
-                'localizacao_maps' => $imovel['localizacao_maps'] ?? null,
+                // 'localizacao_maps' => $imovel['localizacao_maps'] ?? null,
                 'area_util' => $imovel['area_util'] ?? null,
                 'terreno' => $imovel['terreno'] ?? null,
                 'area_constr' => $imovel['area_constr'] ?? null,

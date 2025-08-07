@@ -1,16 +1,21 @@
 <?php
 
-namespace Database\Seeders;
+namespace Database\Factories;
 
-use Illuminate\Database\Seeder;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\TipoImovel;
 
-class TipoImovelSeeder extends Seeder
+/**
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\TipoImovel>
+ */
+class TipoImovelFactory extends Factory
 {
     /**
-     * Run the database seeds.
+     * Define the model's default state.
+     *
+     * @return array<string, mixed>
      */
-    public function run(): void
+    public function definition(): array
     {
         $tipos = [
             'Casa',
@@ -30,8 +35,8 @@ class TipoImovelSeeder extends Seeder
             'Lote',
         ];
 
-        foreach ($tipos as $tipo) {
-            TipoImovel::factory()->create(['nome' => $tipo]);
-        }
+        return [
+            'nome' => fake()->randomElement($tipos),
+        ];
     }
 }

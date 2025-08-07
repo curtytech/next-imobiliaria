@@ -146,23 +146,13 @@ $propertyTypeLabel = computed(function () {
             <!-- Property Details -->
             <div class="container mx-auto px-4 py-8">
                 <!-- Breadcrumb -->
-                <nav class="mb-6">
-                    <ol class="flex items-center space-x-2 text-sm text-gray-500">
-                        <li>
-                            <a href="{{ route('welcome') }}" class="hover:text-primary">Início</a>
-                        </li>
-                        <li>
-                            <x-lucide-chevron-right class="w-4 h-4" />
-                        </li>
-                        <li>
-                            <a href="{{ route('search') }}" class="hover:text-primary">Buscar</a>
-                        </li>
-                        <li>
-                            <x-lucide-chevron-right class="w-4 h-4" />
-                        </li>
-                        <li class="text-gray-900">{{ $imovel->titulo }}</li>
-                    </ol>
-                </nav>
+                @livewire('breadcrumb', [
+                    'items' => [
+                        ['label' => 'Início', 'url' => route('welcome')],
+                        ['label' => 'Buscar', 'url' => route('search')],
+                        ['label' => $imovel->titulo, 'active' => true]
+                    ]
+                ])
 
                 <!-- Property Header -->
                 <div class="mb-8">
@@ -266,7 +256,9 @@ $propertyTypeLabel = computed(function () {
                                 <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
                                     @foreach ($imovel->videos as $videoUrl)
                                         @php
-                                            $videoId = $imovel->extractYouTubeId($videoUrl['url']);
+                                            // Lidar com ambos os formatos: string simples ou array com chave 'url'
+                                            $url = is_array($videoUrl) ? ($videoUrl['url'] ?? '') : $videoUrl;
+                                            $videoId = $imovel->extractYouTubeId($url);
                                         @endphp
                                         @if ($videoId)
                                             <div class="w-full">

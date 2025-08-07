@@ -25,11 +25,15 @@ class UserFactory extends Factory
     {
         return [
             'name' => fake()->name(),
+            'descricao' => fake()->optional(0.7)->paragraph(2),
             'email' => fake()->unique()->safeEmail(),
+            'foto' => fake()->optional(0.5)->imageUrl(200, 200, 'people'),
+            'creci' => fake()->optional(0.8)->numerify('CRECI-RJ ####'),
+            'celular' => fake()->optional(0.9)->phoneNumber(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
-            'role' => 'corretor',
+            'role' => fake()->randomElement(['admin', 'corretor']),
         ];
     }
 
@@ -40,6 +44,27 @@ class UserFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
+        ]);
+    }
+
+    /**
+     * Indicate that the user should be an admin.
+     */
+    public function admin(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => 'admin',
+        ]);
+    }
+
+    /**
+     * Indicate that the user should be a corretor.
+     */
+    public function corretor(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => 'corretor',
+            'creci' => fake()->numerify('CRECI-RJ ####'),
         ]);
     }
 }

@@ -19,7 +19,7 @@ class StatusImovelSeeder extends Seeder
         ];
 
         foreach ($tipos as $tipo) {
-            StatusImovel::firstOrCreate(['nome' => $tipo]);
+            StatusImovel::factory()->create(['nome' => $tipo]);
         }
     }
 }
