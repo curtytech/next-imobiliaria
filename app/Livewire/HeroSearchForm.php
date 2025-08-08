@@ -18,10 +18,19 @@ class HeroSearchForm extends Component
 
     public function search()
     {
+        // Map propertyType to situacao values
+        $situacao = '';
+        if ($this->propertyType === 'venda') {
+            $situacao = 'vende-se';
+        } elseif ($this->propertyType === 'aluguel') {
+            $situacao = 'aluga-se';
+        }
+
         // Redirect to the search page with query parameters
         return redirect()->route('search', [
             'location' => $this->location,
             'propertyType' => $this->propertyKind,
+            'situacao' => $situacao,
         ]);
     }
 

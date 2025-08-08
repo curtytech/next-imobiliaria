@@ -157,8 +157,10 @@ state([
             </div>
         </div>
     </section> -->
+    
     <!-- Loan Simulator Section -->
     <livewire:loan-simulator />
+    
     <!-- Agents Section -->
     <section id="agents" class="py-16 md:py-24">
         <div class="container px-4 mx-auto">

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Log;
 state([
     'location' => '',
     'propertyType' => '',
+    'situacao' => '',
     'priceMin' => '',
     'priceMax' => '',
     'areaMin' => '',
@@ -22,6 +23,12 @@ state([
     'garageSpaces' => '',
     'neighborhood' => '',
     'cep' => '',
+    'country' => '',
+    'state' => '',
+    'street' => '',
+    'title' => '',
+    'address' => '',
+    'featured' => false,
     'viewMode' => 'grid',
     'sortBy' => 'recent',
     'propertiesFound' => 0,
@@ -49,6 +56,13 @@ mount(function () {
         $this->garageSpaces = request()->get('garageSpaces', '');
         $this->neighborhood = request()->get('neighborhood', '');
         $this->cep = request()->get('cep', '');
+        $this->country = request()->get('country', '');
+        $this->state = request()->get('state', '');
+        $this->street = request()->get('street', '');
+        $this->title = request()->get('title', '');
+        $this->address = request()->get('address', '');
+        $this->featured = request()->get('featured', false);
+        $this->situacao = request()->get('situacao', '');
         $this->loadProperties();
     } catch (\Exception $e) {
         Log::error('Error mounting property search component: ' . $e->getMessage());
@@ -88,10 +102,43 @@ $buildQuery = function () {
         }
 
         // Property type filter
-        if (!empty($this->propertyType)) {
-            $query->whereHas('tipoImovel', function($q) {
-                $q->where('nome', 'like', '%' . $this->propertyType . '%');
-            });
+        if (!empty($this->propertyType) && is_numeric($this->propertyType)) {
+            $query->where('tipo_id', $this->propertyType);
+        }
+
+        // Situacao filter (vende-se/aluga-se)
+        if (!empty($this->situacao)) {
+            $query->where('situacao', $this->situacao);
+        }
+
+        // Country filter
+        if (!empty($this->country)) {
+            $query->where('pais', 'like', '%' . trim($this->country) . '%');
+        }
+
+        // State filter
+        if (!empty($this->state)) {
+            $query->where('estado', 'like', '%' . trim($this->state) . '%');
+        }
+
+        // Street filter
+        if (!empty($this->street)) {
+            $query->where('endereco', 'like', '%' . trim($this->street) . '%');
+        }
+
+        // Title filter
+        if (!empty($this->title)) {
+            $query->where('titulo', 'like', '%' . trim($this->title) . '%');
+        }
+
+        // Address filter (endereco + numero)
+        if (!empty($this->address)) {
+            $query->where('endereco', 'like', '%' . trim($this->address) . '%');
+        }
+
+        // Featured filter
+        if ($this->featured) {
+            $query->where('destaque', true);
         }
 
         // Price range filter
@@ -128,17 +175,29 @@ $buildQuery = function () {
 
         // Bedrooms filter
         if (!empty($this->bedrooms) && is_numeric($this->bedrooms)) {
-            $query->where('quartos', '>=', (int) $this->bedrooms);
+            if ($this->bedrooms == 5) {
+                $query->where('quartos', '>=', 5);
+            } else {
+                $query->where('quartos', '=', (int) $this->bedrooms);
+            }
         }
 
         // Bathrooms filter
         if (!empty($this->bathrooms) && is_numeric($this->bathrooms)) {
-            $query->where('banheiros', '>=', (int) $this->bathrooms);
+            if ($this->bathrooms == 5) {
+                $query->where('banheiros', '>=', 5);
+            } else {
+                $query->where('banheiros', '=', (int) $this->bathrooms);
+            }
         }
 
         // Garage spaces filter
         if (!empty($this->garageSpaces) && is_numeric($this->garageSpaces)) {
-            $query->where('vagas_garagem', '>=', (int) $this->garageSpaces);
+            if ($this->garageSpaces == 5) {
+                $query->where('vagas_garagem', '>=', 5);
+            } else {
+                $query->where('vagas_garagem', '=', (int) $this->garageSpaces);
+            }
         }
 
         // Sorting
@@ -218,12 +277,26 @@ $clearFilters = function () {
     try {
         $this->location = '';
         $this->propertyType = '';
+        $this->situacao = '';
         $this->priceMin = '';
         $this->priceMax = '';
         $this->areaMin = '';
         $this->areaMax = '';
+        $this->areaUtilMin = '';
+        $this->areaUtilMax = '';
+        $this->terrenoMin = '';
+        $this->terrenoMax = '';
         $this->bedrooms = '';
         $this->bathrooms = '';
+        $this->garageSpaces = '';
+        $this->neighborhood = '';
+        $this->cep = '';
+        $this->country = '';
+        $this->state = '';
+        $this->street = '';
+        $this->title = '';
+        $this->address = '';
+        $this->featured = false;
         $this->currentPage = 1;
         $this->error = null;
         $this->loadProperties();
@@ -239,7 +312,9 @@ $retryLoad = function () {
 };
 
 with([
-    'tipoImovel' => TipoImovel::all()
+    'tipoImovel' => TipoImovel::all(),
+    'paises' => Imovel::select('pais')->distinct()->whereNotNull('pais')->where('pais', '!=', '')->orderBy('pais')->pluck('pais'),
+    'estados' => Imovel::select('estado')->distinct()->whereNotNull('estado')->where('estado', '!=', '')->orderBy('estado')->pluck('estado')
 ]);
 
 ?>
@@ -288,6 +363,16 @@ with([
                     </div>
 
                     <div>
+                        <label class="block mb-2 text-sm font-semibold">Tipo de anúncio</label>
+                        <select wire:model.live="situacao"
+                            class="px-4 py-2 w-full bg-gray-50 rounded-lg border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary">
+                            <option value="">Todos</option>
+                            <option value="vende-se">Venda</option>
+                            <option value="aluga-se">Aluguel</option>
+                        </select>
+                    </div>
+
+                    <div>
                         <label class="block mb-2 text-sm font-semibold">Faixa de preço</label>
                         <div class="flex items-center space-x-2">
                             <input type="number" wire:model.live.debounce.500ms="priceMin" min="0"
@@ -314,15 +399,62 @@ with([
                     </div>
 
                     <div>
+                        <label class="block mb-2 text-sm font-semibold">Título</label>
+                        <input type="text" wire:model.live.debounce.500ms="title"
+                            class="px-4 py-2 w-full bg-gray-50 rounded-lg border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary"
+                            placeholder="Buscar por título">
+                    </div>
+
+                    <div>
+                        <label class="block mb-2 text-sm font-semibold">Endereço</label>
+                        <input type="text" wire:model.live.debounce.500ms="address"
+                            class="px-4 py-2 w-full bg-gray-50 rounded-lg border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary"
+                            placeholder="Rua, número">
+                    </div>
+
+                    <div>
+                        <label class="block mb-2 text-sm font-semibold">Estado</label>
+                        <input type="text" wire:model.live.debounce.500ms="state" list="estados-list"
+                            class="px-4 py-2 w-full bg-gray-50 rounded-lg border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary"
+                            placeholder="Ex: RJ, SP">
+                        <datalist id="estados-list">
+                            @foreach($estados as $estado)
+                                <option value="{{ $estado }}">{{ $estado }}</option>
+                            @endforeach
+                        </datalist>
+                    </div>
+
+                    <div>
+                        <label class="block mb-2 text-sm font-semibold">País</label>
+                        <input type="text" wire:model.live.debounce.500ms="country" list="paises-list"
+                            class="px-4 py-2 w-full bg-gray-50 rounded-lg border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary"
+                            placeholder="Ex: Brasil">
+                        <datalist id="paises-list">
+                            @foreach($paises as $pais)
+                                <option value="{{ $pais }}">{{ $pais }}</option>
+                            @endforeach
+                        </datalist>
+                    </div>
+
+                    <div>
+                        <label class="flex items-center space-x-2">
+                            <input type="checkbox" wire:model.live="featured"
+                                class="rounded border-gray-300 text-primary focus:border-primary focus:ring focus:ring-primary focus:ring-opacity-50">
+                            <span class="text-sm font-semibold">Apenas imóveis em destaque</span>
+                        </label>
+                    </div>
+
+                    <div>
                         <label class="block mb-2 text-sm font-semibold">Quartos</label>
                         <select wire:model.live="bedrooms"
                             class="px-4 py-2 w-full bg-gray-50 rounded-lg border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary">
                             <option value="">Qualquer</option>
-                            <option value="1">1+</option>
-                            <option value="2">2+</option>
-                            <option value="3">3+</option>
-                            <option value="4">4+</option>
-                            <option value="5">5+</option>
+                            <option value="0">0 (Nenhum)</option>
+                            <option value="1">1 quarto</option>
+                            <option value="2">2 quartos</option>
+                            <option value="3">3 quartos</option>
+                            <option value="4">4 quartos</option>
+                            <option value="5">5+ quartos</option>
                         </select>
                     </div>
 
@@ -331,10 +463,12 @@ with([
                         <select wire:model.live="bathrooms"
                             class="px-4 py-2 w-full bg-gray-50 rounded-lg border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary">
                             <option value="">Qualquer</option>
-                            <option value="1">1+</option>
-                            <option value="2">2+</option>
-                            <option value="3">3+</option>
-                            <option value="4">4+</option>
+                            <option value="0">0 (Nenhum)</option>
+                            <option value="1">1 banheiro</option>
+                            <option value="2">2 banheiros</option>
+                            <option value="3">3 banheiros</option>
+                            <option value="4">4 banheiros</option>
+                            <option value="5">5+ banheiros</option>
                         </select>
                     </div>
 
@@ -343,10 +477,12 @@ with([
                         <select wire:model.live="garageSpaces"
                             class="px-4 py-2 w-full bg-gray-50 rounded-lg border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary">
                             <option value="">Qualquer</option>
-                            <option value="1">1+</option>
-                            <option value="2">2+</option>
-                            <option value="3">3+</option>
-                            <option value="4">4+</option>
+                            <option value="0">Nenhuma (0)</option>
+                            <option value="1">1 vaga</option>
+                            <option value="2">2 vagas</option>
+                            <option value="3">3 vagas</option>
+                            <option value="4">4 vagas</option>
+                            <option value="5">5+ vagas</option>
                         </select>
                     </div>
 
