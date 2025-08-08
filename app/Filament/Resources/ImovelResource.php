@@ -78,6 +78,14 @@ class ImovelResource extends Resource
                             ->relationship('tipoImovel', 'nome')
                             ->required(),
 
+                        Select::make('situacao')
+                            ->label('Situação')
+                            ->options([
+                                'vende-se' => 'Vende-se',
+                                'aluga-se' => 'Aluga-se',
+                            ])
+                            ->required(),
+
                         Select::make('status_id')
                             ->label('Status')
                             ->relationship('statusImovel', 'nome')
@@ -318,6 +326,10 @@ class ImovelResource extends Resource
                     ->label('Tipo')
                     ->sortable(),
 
+                TextColumn::make('tipoImovel.situacao')
+                    ->label('Situação')
+                    ->sortable(),
+
                 TextColumn::make('preco')
                     ->label('Preço')
                     ->money('BRL')
@@ -357,6 +369,13 @@ class ImovelResource extends Resource
                     ->sortable(),
             ])
             ->filters([
+                SelectFilter::make('situacao')
+                    ->label('Situação')
+                    ->options([
+                        'vende-se' => 'Vende-se',
+                        'aluga-se' => 'Aluga-se',
+                    ]),
+
                 SelectFilter::make('tipo_id')
                     ->label('Tipo')
                     ->relationship('tipoImovel', 'nome'),
