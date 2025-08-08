@@ -10,6 +10,7 @@
 
 Ideias Dashboard 
 Lista de Imoveis mais vistos
+Relatórios e Graficos - Total de Imoveis
 
 
 
