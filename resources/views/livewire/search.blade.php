@@ -177,6 +177,11 @@ $buildQuery = function () {
         if (!empty($this->bedrooms) && is_numeric($this->bedrooms)) {
             if ($this->bedrooms == 5) {
                 $query->where('quartos', '>=', 5);
+            } elseif ($this->bedrooms == 0) {
+                $query->where(function($q) {
+                    $q->where('quartos', '=', 0)
+                      ->orWhereNull('quartos');
+                });
             } else {
                 $query->where('quartos', '=', (int) $this->bedrooms);
             }
@@ -186,6 +191,11 @@ $buildQuery = function () {
         if (!empty($this->bathrooms) && is_numeric($this->bathrooms)) {
             if ($this->bathrooms == 5) {
                 $query->where('banheiros', '>=', 5);
+            } elseif ($this->bathrooms == 0) {
+                $query->where(function($q) {
+                    $q->where('banheiros', '=', 0)
+                      ->orWhereNull('banheiros');
+                });
             } else {
                 $query->where('banheiros', '=', (int) $this->bathrooms);
             }
@@ -195,6 +205,11 @@ $buildQuery = function () {
         if (!empty($this->garageSpaces) && is_numeric($this->garageSpaces)) {
             if ($this->garageSpaces == 5) {
                 $query->where('vagas_garagem', '>=', 5);
+            } elseif ($this->garageSpaces == 0) {
+                $query->where(function($q) {
+                    $q->where('vagas_garagem', '=', 0)
+                      ->orWhereNull('vagas_garagem');
+                });
             } else {
                 $query->where('vagas_garagem', '=', (int) $this->garageSpaces);
             }
