@@ -96,6 +96,11 @@ class ImovelResource extends Resource
 
                 Section::make('Financeiro')
                     ->schema([
+                        TextInput::make('preco')
+                            ->label('Preço')
+                            ->numeric()
+                            ->prefix('R$')
+                            ->required(),
                         TextInput::make('preco_iptu')
                             ->label('Preço de IPTU')
                             ->numeric()
@@ -104,11 +109,7 @@ class ImovelResource extends Resource
                             ->label('Preço de Condomínio')
                             ->numeric()
                             ->prefix('R$'),
-                        TextInput::make('preco')
-                            ->label('Preço')
-                            ->numeric()
-                            ->prefix('R$')
-                            ->required(),
+
 
                     ])->columns(2),
 

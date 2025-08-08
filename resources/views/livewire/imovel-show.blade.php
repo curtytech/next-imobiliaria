@@ -305,6 +305,24 @@ $propertyTypeLabel = computed(function () {
                         <div class="bg-white rounded-xl shadow p-6">
                             <h3 class="text-lg font-bold text-gray-900 mb-4">Detalhes do Imóvel</h3>
                             <div class="space-y-4">
+                                @if ($imovel->preco)
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-gray-600">Preço</span>
+                                        <span class="font-semibold">R$ {{ number_format($imovel->preco, 2, ',', '.') }}</span>
+                                    </div>
+                                @endif
+                                @if ($imovel->preco_condominio)
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-gray-600">Preço do Condomínio</span>
+                                        <span class="font-semibold">R$ {{ number_format($imovel->preco_condominio, 2, ',', '.') }}</span>
+                                    </div>
+                                @endif
+                                @if ($imovel->preco_iptu)
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-gray-600">Preço do IPTU</span>
+                                        <span class="font-semibold">R$ {{ number_format($imovel->preco_iptu, 2, ',', '.') }}</span>
+                                    </div>
+                                @endif
                                 @if ($imovel->area)
                                     <div class="flex items-center justify-between">
                                         <span class="text-gray-600">Área Total</span>
