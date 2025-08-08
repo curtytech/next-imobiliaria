@@ -253,7 +253,7 @@ class ImovelResource extends Resource
 
                         TextInput::make('cep')
                             ->label('CEP')
-                            ->length(8)
+                            ->maxLength(8)
                             ->numeric()
                             ->required(),
 
