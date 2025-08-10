@@ -1,62 +1,78 @@
-# Multi-stage build otimizado com Bun
-FROM oven/bun:1 AS frontend
+# Multi-stage build com Node.js (mais estável)
+FROM node:18-alpine AS frontend
 
 WORKDIR /app
 
 # Copiar arquivos de dependências
-COPY package.json bun.lockb ./
+COPY package*.json ./
 
-# Instalar dependências com Bun
-RUN bun install --frozen-lockfile
+# Instalar dependências
+RUN npm ci
 
 # Copiar código fonte
 COPY . .
 
 # Build dos assets
-RUN bun run build
+RUN npm run build
 
 # Stage principal do PHP
 FROM php:8.2-fpm
 
-# Instalar dependências do sistema
+# Instalar dependências do sistema em uma única camada
 RUN apt-get update && apt-get install -y \
-    libzip-dev unzip git curl nginx supervisor \
-    libpng-dev libonig-dev libxml2-dev \
-    libpq-dev postgresql-client \
+    libzip-dev \
+    unzip \
+    git \
+    curl \
+    nginx \
+    supervisor \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    libpq-dev \
+    postgresql-client \
+    nodejs \
+    npm \
+    && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
+    && docker-php-ext-install -j$(nproc) \
+        pdo \
+        pdo_mysql \
+        pdo_pgsql \
+        zip \
+        bcmath \
+        mbstring \
+        xml \
+        gd \
+    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
-
-# Instalar extensões PHP separadamente para garantir sucesso
-RUN docker-php-ext-install pdo
-RUN docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql
-RUN docker-php-ext-install pdo_pgsql
-RUN docker-php-ext-install pdo_mysql
-RUN docker-php-ext-install zip
-RUN docker-php-ext-install bcmath
-RUN docker-php-ext-install mbstring
-RUN docker-php-ext-install xml
-RUN docker-php-ext-install gd
-
-# Instalar Bun
-RUN curl -fsSL https://bun.sh/install | bash \
-    && mv /root/.bun/bin/bun /usr/local/bin/ \
-    && chmod +x /usr/local/bin/bun
 
 # Copiar composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
+# Definir diretório de trabalho
 WORKDIR /var/www/html
 
-# Copiar apenas os arquivos de dependências primeiro
+# Copiar apenas composer.json e composer.lock primeiro (para cache)
 COPY composer.json composer.lock ./
 
-# Instalar dependências PHP sem verificação prévia
-RUN COMPOSER_MEMORY_LIMIT=-1 composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
+# Criar diretórios necessários antes do composer install
+RUN mkdir -p storage/logs storage/framework/cache storage/framework/sessions storage/framework/views bootstrap/cache
 
-# Copiar arquivos de dependências do Bun
-COPY package.json bun.lockb ./
+# Instalar dependências PHP com configurações otimizadas
+RUN composer config --global process-timeout 2000 \
+    && composer config --global memory-limit -1 \
+    && composer install \
+        --no-dev \
+        --optimize-autoloader \
+        --no-interaction \
+        --prefer-dist \
+        --no-scripts
 
-# Instalar dependências com Bun
-RUN bun install --frozen-lockfile --production
+# Copiar package.json para dependências Node.js
+COPY package*.json ./
+
+# Instalar dependências Node.js
+RUN npm ci --only=production
 
 # Copiar todo o código da aplicação
 COPY . .
@@ -64,12 +80,15 @@ COPY . .
 # Copiar assets buildados do stage anterior
 COPY --from=frontend /app/public/build ./public/build
 
-# Copiar configurações
+# Executar scripts do composer após copiar todos os arquivos
+RUN composer run-script post-autoload-dump
+
+# Copiar configurações do Docker
 COPY docker/nginx.conf /etc/nginx/sites-available/default
 COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY docker/start.sh /start.sh
 
-# Definir permissões
+# Definir permissões corretas
 RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html/storage \
     && chmod -R 755 /var/www/html/bootstrap/cache \
