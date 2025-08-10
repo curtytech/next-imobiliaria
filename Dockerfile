@@ -1,32 +1,32 @@
-# Multi-stage build para otimizar o tamanho da imagem
-FROM node:18-alpine AS frontend
+# Multi-stage build otimizado com Bun
+FROM oven/bun:1 AS frontend
 
 WORKDIR /app
 
-# Copiar arquivos de dependências do frontend
-COPY package*.json ./
+# Copiar arquivos de dependências
+COPY package.json bun.lockb ./
 
-# Instalar dependências usando npm install em vez de npm ci
-RUN npm install --omit=dev
+# Instalar dependências com Bun (muito mais rápido)
+RUN bun install --frozen-lockfile --production
 
 # Copiar código fonte
 COPY . .
 
 # Build dos assets
-RUN npm run build
+RUN bun run build
 
 # Stage principal do PHP
 FROM php:8.2-fpm
 
-# Instalar Node.js
-RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
-    && apt-get install -y nodejs
+# Instalar Bun no container PHP
+RUN curl -fsSL https://bun.sh/install | bash
+ENV PATH="/root/.bun/bin:$PATH"
 
 # Instalar dependências do sistema
 RUN apt-get update && apt-get install -y \
     libzip-dev unzip git curl nginx supervisor \
-    libpng-dev libonig-dev libxml2-dev \
-    && docker-php-ext-install pdo pdo_mysql zip bcmath mbstring xml gd \
+    libpng-dev libonig-dev libxml2-dev libpq-dev \
+    && docker-php-ext-install pdo pdo_mysql pdo_pgsql zip bcmath mbstring xml gd \
     && rm -rf /var/lib/apt/lists/*
 
 # Copiar composer
@@ -34,32 +34,37 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
 
-# Copiar arquivos de dependências
-COPY composer.json composer.lock package*.json ./
+# Copiar apenas os arquivos de dependências primeiro
+COPY composer.json composer.lock ./
 
-# Instalar dependências PHP e Node.js
-RUN COMPOSER_MEMORY_LIMIT=-1 composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist \
-    && npm install --omit=dev
+# Instalar dependências PHP
+RUN COMPOSER_MEMORY_LIMIT=-1 composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
 
-# Copiar código da aplicação
+# Copiar arquivos de dependências do Bun
+COPY package.json bun.lockb ./
+
+# Instalar dependências com Bun
+RUN bun install --frozen-lockfile --production
+
+# Copiar todo o código da aplicação
 COPY . .
 
-# Build dos assets
-RUN npm run build
-
-# Criar diretórios necessários e ajustar permissões
-RUN mkdir -p storage/logs storage/framework/{cache,sessions,views} bootstrap/cache \
-    && chown -R www-data:www-data storage bootstrap/cache \
-    && chmod -R 775 storage bootstrap/cache
+# Copiar assets buildados do stage anterior
+COPY --from=frontend /app/public/build ./public/build
 
 # Copiar configurações
-COPY ./docker/nginx.conf /etc/nginx/conf.d/default.conf
-COPY ./docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY docker/nginx.conf /etc/nginx/sites-available/default
+COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY docker/start.sh /start.sh
 
-# Script de inicialização
-COPY ./docker/start.sh /start.sh
-RUN chmod +x /start.sh
+# Definir permissões
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html/storage \
+    && chmod -R 755 /var/www/html/bootstrap/cache \
+    && chmod +x /start.sh
 
+# Expor porta
 EXPOSE 80
 
+# Comando de inicialização
 CMD ["/start.sh"]
