@@ -5,10 +5,9 @@ WORKDIR /app
 
 # Copiar arquivos de dependências do frontend
 COPY package*.json ./
-COPY bun.lock* ./
 
-# Instalar dependências (usando npm como fallback se bun não estiver disponível)
-RUN npm ci --only=production
+# Instalar dependências usando npm install em vez de npm ci
+RUN npm install --omit=dev
 
 # Copiar código fonte
 COPY . .
@@ -18,6 +17,10 @@ RUN npm run build
 
 # Stage principal do PHP
 FROM php:8.2-fpm
+
+# Instalar Node.js
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+    && apt-get install -y nodejs
 
 # Instalar dependências do sistema
 RUN apt-get update && apt-get install -y \
@@ -32,16 +35,17 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www/html
 
 # Copiar arquivos de dependências
-COPY composer.json composer.lock ./
+COPY composer.json composer.lock package*.json ./
 
-# Instalar dependências PHP
-RUN COMPOSER_MEMORY_LIMIT=-1 composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
+# Instalar dependências PHP e Node.js
+RUN COMPOSER_MEMORY_LIMIT=-1 composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist \
+    && npm install --omit=dev
 
 # Copiar código da aplicação
 COPY . .
 
-# Copiar assets buildados do frontend
-COPY --from=frontend /app/public/build ./public/build
+# Build dos assets
+RUN npm run build
 
 # Criar diretórios necessários e ajustar permissões
 RUN mkdir -p storage/logs storage/framework/{cache,sessions,views} bootstrap/cache \
