@@ -3,7 +3,7 @@ FROM php:8.2-fpm
 # Instalar dependências do sistema e extensões PHP exigidas pelo Laravel
 RUN apt-get update && apt-get install -y \
     libzip-dev unzip git curl nginx supervisor libpng-dev libonig-dev libxml2-dev && \
-    docker-php-ext-install pdo pdo_mysql zip bcmath mbstring tokenizer xml gd && \
+    docker-php-ext-install pdo pdo_mysql zip bcmath mbstring xml gd && \
     rm -rf /var/lib/apt/lists/*
 
 # Instalar Composer
