@@ -1,0 +1,61 @@
+services:
+  - type: web
+    name: next-imobiliaria
+    env: docker
+    plan: starter
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: APP_NAME
+        value: "Next Imobiliária"
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      - key: APP_URL
+        sync: false
+      - key: APP_KEY
+        generateValue: true
+      - key: APP_LOCALE
+        value: pt_BR
+      - key: APP_FALLBACK_LOCALE
+        value: pt_BR
+      - key: APP_FAKER_LOCALE
+        value: pt_BR
+      - key: LOG_CHANNEL
+        value: stderr
+      - key: LOG_LEVEL
+        value: info
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_HOST
+        fromDatabase:
+          name: next-imobiliaria-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: next-imobiliaria-db
+          property: port
+      - key: DB_DATABASE
+        fromDatabase:
+          name: next-imobiliaria-db
+          property: database
+      - key: DB_USERNAME
+        fromDatabase:
+          name: next-imobiliaria-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: next-imobiliaria-db
+          property: password
+      - key: SESSION_DRIVER
+        value: database
+      - key: CACHE_STORE
+        value: database
+      - key: QUEUE_CONNECTION
+        value: database
+      - key: MAIL_MAILER
+        value: smtp
+
+databases:
+  - name: next-imobiliaria-db
+    plan: starter

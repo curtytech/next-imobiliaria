@@ -1,39 +1,61 @@
-FROM php:8.2-fpm
+# Multi-stage build para otimizar o tamanho da imagem
+FROM node:18-alpine AS frontend
 
-# Instalar dependências do sistema e extensões PHP exigidas pelo Laravel
-RUN apt-get update && apt-get install -y \
-    libzip-dev unzip git curl nginx supervisor libpng-dev libonig-dev libxml2-dev && \
-    docker-php-ext-install pdo pdo_mysql zip bcmath mbstring xml gd && \
-    rm -rf /var/lib/apt/lists/*
+WORKDIR /app
 
-# Instalar Composer
-COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+# Copiar arquivos de dependências do frontend
+COPY package*.json ./
+COPY bun.lock* ./
 
-# Criar pasta de trabalho
-WORKDIR /var/www/html
+# Instalar dependências (usando npm como fallback se bun não estiver disponível)
+RUN npm ci --only=production
 
-# Copiar composer.json e composer.lock primeiro (cache)
-COPY composer.json composer.lock ./
-
-# Instalar dependências PHP do Laravel
-RUN composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
-
-# Copiar todo o projeto
+# Copiar código fonte
 COPY . .
 
-# Ajustar permissões
-RUN chown -R www-data:www-data \
-    /var/www/html/storage \
-    /var/www/html/bootstrap/cache
+# Build dos assets
+RUN npm run build
 
-# Configuração do Nginx
+# Stage principal do PHP
+FROM php:8.2-fpm
+
+# Instalar dependências do sistema
+RUN apt-get update && apt-get install -y \
+    libzip-dev unzip git curl nginx supervisor \
+    libpng-dev libonig-dev libxml2-dev \
+    && docker-php-ext-install pdo pdo_mysql zip bcmath mbstring xml gd \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copiar composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+WORKDIR /var/www/html
+
+# Copiar arquivos de dependências
+COPY composer.json composer.lock ./
+
+# Instalar dependências PHP
+RUN COMPOSER_MEMORY_LIMIT=-1 composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
+
+# Copiar código da aplicação
+COPY . .
+
+# Copiar assets buildados do frontend
+COPY --from=frontend /app/public/build ./public/build
+
+# Criar diretórios necessários e ajustar permissões
+RUN mkdir -p storage/logs storage/framework/{cache,sessions,views} bootstrap/cache \
+    && chown -R www-data:www-data storage bootstrap/cache \
+    && chmod -R 775 storage bootstrap/cache
+
+# Copiar configurações
 COPY ./docker/nginx.conf /etc/nginx/conf.d/default.conf
-
-# Configuração do Supervisor (para rodar PHP-FPM e Nginx juntos)
 COPY ./docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-# Expor porta HTTP
+# Script de inicialização
+COPY ./docker/start.sh /start.sh
+RUN chmod +x /start.sh
+
 EXPOSE 80
 
-# Iniciar Supervisor
-CMD ["/usr/bin/supervisord"]
+CMD ["/start.sh"]
