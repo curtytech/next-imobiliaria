@@ -18,20 +18,21 @@ RUN bun run build
 # Stage principal do PHP
 FROM php:8.2-fpm
 
-# Instalar dependências do sistema primeiro
+# Instalar dependências do sistema e extensões PHP
 RUN apt-get update && apt-get install -y \
     libzip-dev unzip git curl nginx supervisor \
-    libpng-dev libonig-dev libxml2-dev libpq-dev \
-    && docker-php-ext-install pdo pdo_mysql pdo_pgsql zip bcmath mbstring xml gd \
+    libpng-dev libonig-dev libxml2-dev \
+    libpq-dev postgresql-client \
+    && docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
+    && docker-php-ext-install \
+        pdo pdo_mysql pdo_pgsql \
+        zip bcmath mbstring xml gd \
     && rm -rf /var/lib/apt/lists/*
 
 # Instalar Bun corretamente
 RUN curl -fsSL https://bun.sh/install | bash \
     && mv /root/.bun/bin/bun /usr/local/bin/ \
     && chmod +x /usr/local/bin/bun
-
-# Verificar se Bun foi instalado corretamente
-RUN bun --version
 
 # Copiar composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
@@ -41,8 +42,9 @@ WORKDIR /var/www/html
 # Copiar apenas os arquivos de dependências primeiro
 COPY composer.json composer.lock ./
 
-# Instalar dependências PHP
-RUN COMPOSER_MEMORY_LIMIT=-1 composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
+# Instalar dependências PHP com verificação de extensões
+RUN php -m | grep -E '(pdo|pgsql|zip|mbstring)' \
+    && COMPOSER_MEMORY_LIMIT=-1 composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist
 
 # Copiar arquivos de dependências do Bun
 COPY package.json bun.lockb ./
