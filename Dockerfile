@@ -6,8 +6,8 @@ WORKDIR /app
 # Copiar arquivos de dependências
 COPY package.json bun.lockb ./
 
-# Instalar dependências com Bun (muito mais rápido)
-RUN bun install --frozen-lockfile --production
+# Instalar dependências com Bun
+RUN bun install --frozen-lockfile
 
 # Copiar código fonte
 COPY . .
@@ -18,16 +18,20 @@ RUN bun run build
 # Stage principal do PHP
 FROM php:8.2-fpm
 
-# Instalar Bun no container PHP
-RUN curl -fsSL https://bun.sh/install | bash
-ENV PATH="/root/.bun/bin:$PATH"
-
-# Instalar dependências do sistema
+# Instalar dependências do sistema primeiro
 RUN apt-get update && apt-get install -y \
     libzip-dev unzip git curl nginx supervisor \
     libpng-dev libonig-dev libxml2-dev libpq-dev \
     && docker-php-ext-install pdo pdo_mysql pdo_pgsql zip bcmath mbstring xml gd \
     && rm -rf /var/lib/apt/lists/*
+
+# Instalar Bun corretamente
+RUN curl -fsSL https://bun.sh/install | bash \
+    && mv /root/.bun/bin/bun /usr/local/bin/ \
+    && chmod +x /usr/local/bin/bun
+
+# Verificar se Bun foi instalado corretamente
+RUN bun --version
 
 # Copiar composer
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
