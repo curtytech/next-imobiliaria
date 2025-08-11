@@ -1,34 +1,100 @@
-# Escolhe imagem oficial do PHP com extensões necessárias
-FROM php:8.2-fpm
+# Dockerfile otimizado com Bun - versão corrigida
+FROM oven/bun:1 AS frontend
 
-# Instala dependências básicas
-RUN apt-get update && apt-get install -y \
-    git curl libpng-dev libonig-dev libxml2-dev zip unzip \
-    libzip-dev libpq-dev \
-    && docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd zip
+WORKDIR /app
 
-# Instala o Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+# Copiar arquivos de dependências
+COPY package.json bun.lockb ./
 
-# Cria diretório da aplicação
-WORKDIR /var/www
+# Instalar dependências
+RUN bun install --frozen-lockfile
 
-# Copia arquivos
+# Copiar código fonte
 COPY . .
 
-# Instala dependências do Laravel
-RUN composer install --optimize-autoloader --no-dev
+# Build dos assets
+RUN bun run build
 
-# Permissões
-RUN chown -R www-data:www-data /var/www && chmod -R 755 /var/www
+# Stage principal do PHP
+FROM php:8.2-fpm
 
-# Expõe porta
-EXPOSE 8000
+# Instalar dependências do sistema
+RUN apt-get update && apt-get install -y \
+    libzip-dev \
+    unzip \
+    git \
+    curl \
+    nginx \
+    supervisor \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    libpq-dev \
+    postgresql-client \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
+# Configurar e instalar extensões PHP
+RUN docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
+    && docker-php-ext-install -j$(nproc) \
+        pdo \
+        pdo_mysql \
+        pdo_pgsql \
+        zip \
+        bcmath \
+        mbstring \
+        xml \
+        gd
 
-COPY entrypoint.sh /usr/local/bin/entrypoint.sh
-RUN chmod +x /usr/local/bin/entrypoint.sh
+# Copiar composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+WORKDIR /var/www/html
 
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
+# Criar diretórios necessários
+RUN mkdir -p storage/logs \
+    storage/framework/cache \
+    storage/framework/sessions \
+    storage/framework/views \
+    bootstrap/cache \
+    && chmod -R 775 storage bootstrap/cache
+
+# Copiar arquivos do composer
+COPY composer.json composer.lock ./
+
+# Instalar dependências PHP com variáveis de ambiente inline (SEM configurações globais)
+# RUN COMPOSER_MEMORY_LIMIT=-1 COMPOSER_PROCESS_TIMEOUT=2000 \
+#     composer install \
+#     --no-dev \
+#     --optimize-autoloader \
+#     --no-interaction \
+#     --prefer-dist \
+#     --no-scripts
+
+RUN composer install
+
+# Copiar todo o código
+COPY . .
+
+# Copiar assets buildados do stage frontend
+COPY --from=frontend /app/public/build ./public/build
+
+# Executar scripts do composer
+RUN composer run-script post-autoload-dump --no-interaction || echo "Scripts executados com avisos"
+
+# Copiar configurações do Docker
+COPY docker/nginx.conf /etc/nginx/sites-available/default
+COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY docker/start.sh /start.sh
+
+# Definir permissões corretas
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html/storage \
+    && chmod -R 755 /var/www/html/bootstrap/cache \
+    && chmod +x /start.sh
+
+# Expor porta
+EXPOSE 80
+
+# Comando de inicialização
+CMD ["/start.sh"]
