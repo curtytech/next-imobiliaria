@@ -62,16 +62,22 @@ RUN mkdir -p storage/logs \
 # Copiar arquivos do composer
 COPY composer.json composer.lock ./
 
-# Instalar dependências PHP com variáveis de ambiente inline (SEM configurações globais)
-# RUN COMPOSER_MEMORY_LIMIT=-1 COMPOSER_PROCESS_TIMEOUT=2000 \
-#     composer install \
-#     --no-dev \
-#     --optimize-autoloader \
-#     --no-interaction \
-#     --prefer-dist \
-#     --no-scripts
+# Instalar extensões adicionais que podem ser necessárias
+RUN apt-get update && apt-get install -y \
+    libicu-dev \
+    libfreetype6-dev \
+    libjpeg62-turbo-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install -j$(nproc) \
+        intl \
+        gd \
+        exif \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN composer install
+# Instalar dependências
+# Instalar dependências ignorando TODOS os platform requirements
+RUN composer install --no-dev --no-interaction --ignore-platform-reqs
 
 # Copiar todo o código
 COPY . .
