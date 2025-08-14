@@ -172,39 +172,33 @@ $buildQuery = function () {
         }
 
         // Bedrooms filter
-        if (!empty($this->bedrooms) && is_numeric($this->bedrooms)) {
+        if ($this->bedrooms !== '' && is_numeric($this->bedrooms)) {
             if ($this->bedrooms == 5) {
                 $query->where('quartos', '>=', 5);
             } elseif ($this->bedrooms == 0) {
-                $query->where(function ($q) {
-                    $q->where('quartos', '=', 0)->orWhereNull('quartos');
-                });
+                $query->where('quartos', '=', 0);
             } else {
                 $query->where('quartos', '=', (int) $this->bedrooms);
             }
         }
 
         // Bathrooms filter
-        if (!empty($this->bathrooms) && is_numeric($this->bathrooms)) {
+        if ($this->bathrooms !== '' && is_numeric($this->bathrooms)) {
             if ($this->bathrooms == 5) {
                 $query->where('banheiros', '>=', 5);
             } elseif ($this->bathrooms == 0) {
-                $query->where(function ($q) {
-                    $q->where('banheiros', '=', 0)->orWhereNull('banheiros');
-                });
+                $query->where('banheiros', '=', 0);
             } else {
                 $query->where('banheiros', '=', (int) $this->bathrooms);
             }
         }
 
         // Garage spaces filter
-        if (!empty($this->garageSpaces) && is_numeric($this->garageSpaces)) {
+        if ($this->garageSpaces !== '' && is_numeric($this->garageSpaces)) {
             if ($this->garageSpaces == 5) {
                 $query->where('vagas_garagem', '>=', 5);
             } elseif ($this->garageSpaces == 0) {
-                $query->where(function ($q) {
-                    $q->where('vagas_garagem', '=', 0)->orWhereNull('vagas_garagem');
-                });
+                $query->where('vagas_garagem', '=', 0);
             } else {
                 $query->where('vagas_garagem', '=', (int) $this->garageSpaces);
             }
