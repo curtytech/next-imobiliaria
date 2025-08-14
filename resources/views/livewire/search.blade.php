@@ -72,10 +72,9 @@ mount(function () {
 
 $buildQuery = function () {
     try {
-        $query = Imovel::with(['tipoImovel', 'statusImovel', 'corretor'])
-            ->whereHas('statusImovel', function($q) {
-                $q->where('nome', 'Disponível');
-            });
+        $query = Imovel::with(['tipoImovel', 'statusImovel', 'corretor'])->whereHas('statusImovel', function ($q) {
+            $q->where('nome', 'Disponível');
+        });
 
         // Location filter (city, neighborhood, address)
         if (!empty($this->location)) {
@@ -95,9 +94,8 @@ $buildQuery = function () {
         // CEP filter
         if (!empty($this->cep)) {
             $cepLimpo = preg_replace('/[^0-9]/', '', trim($this->cep));
-            $query->where(function($q) use ($cepLimpo) {
-                $q->where('cep', 'like', '%' . $cepLimpo . '%')
-                  ->orWhereRaw('REPLACE(cep, "-", "") LIKE ?', ['%' . $cepLimpo . '%']);
+            $query->where(function ($q) use ($cepLimpo) {
+                $q->where('cep', 'like', '%' . $cepLimpo . '%')->orWhereRaw('REPLACE(cep, "-", "") LIKE ?', ['%' . $cepLimpo . '%']);
             });
         }
 
@@ -178,9 +176,8 @@ $buildQuery = function () {
             if ($this->bedrooms == 5) {
                 $query->where('quartos', '>=', 5);
             } elseif ($this->bedrooms == 0) {
-                $query->where(function($q) {
-                    $q->where('quartos', '=', 0)
-                      ->orWhereNull('quartos');
+                $query->where(function ($q) {
+                    $q->where('quartos', '=', 0)->orWhereNull('quartos');
                 });
             } else {
                 $query->where('quartos', '=', (int) $this->bedrooms);
@@ -192,9 +189,8 @@ $buildQuery = function () {
             if ($this->bathrooms == 5) {
                 $query->where('banheiros', '>=', 5);
             } elseif ($this->bathrooms == 0) {
-                $query->where(function($q) {
-                    $q->where('banheiros', '=', 0)
-                      ->orWhereNull('banheiros');
+                $query->where(function ($q) {
+                    $q->where('banheiros', '=', 0)->orWhereNull('banheiros');
                 });
             } else {
                 $query->where('banheiros', '=', (int) $this->bathrooms);
@@ -206,9 +202,8 @@ $buildQuery = function () {
             if ($this->garageSpaces == 5) {
                 $query->where('vagas_garagem', '>=', 5);
             } elseif ($this->garageSpaces == 0) {
-                $query->where(function($q) {
-                    $q->where('vagas_garagem', '=', 0)
-                      ->orWhereNull('vagas_garagem');
+                $query->where(function ($q) {
+                    $q->where('vagas_garagem', '=', 0)->orWhereNull('vagas_garagem');
                 });
             } else {
                 $query->where('vagas_garagem', '=', (int) $this->garageSpaces);
@@ -329,7 +324,7 @@ $retryLoad = function () {
 with([
     'tipoImovel' => TipoImovel::all(),
     'paises' => Imovel::select('pais')->distinct()->whereNotNull('pais')->where('pais', '!=', '')->orderBy('pais')->pluck('pais'),
-    'estados' => Imovel::select('estado')->distinct()->whereNotNull('estado')->where('estado', '!=', '')->orderBy('estado')->pluck('estado')
+    'estados' => Imovel::select('estado')->distinct()->whereNotNull('estado')->where('estado', '!=', '')->orderBy('estado')->pluck('estado'),
 ]);
 
 ?>
@@ -339,13 +334,10 @@ with([
         <div class="container px-4 py-8 mx-auto">
             <!-- Breadcrumb -->
             @livewire('breadcrumb', [
-                'items' => [
-                    ['label' => 'Início', 'url' => route('welcome')],
-                    ['label' => 'Buscar Imóveis', 'active' => true]
-                ]
+                'items' => [['label' => 'Início', 'url' => route('welcome')], ['label' => 'Buscar Imóveis', 'active' => true]],
             ])
         </div>
-        
+
         <div class="container flex flex-col gap-8 px-4 pb-8 mx-auto lg:flex-row">
             <!-- Sidebar Filters -->
             <aside class="p-6 mb-8 w-full bg-white rounded-xl shadow lg:w-64 lg:mb-0">
@@ -371,7 +363,7 @@ with([
                         <select wire:model.live="propertyType"
                             class="px-4 py-2 w-full bg-gray-50 rounded-lg border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary">
                             <option value="">Todos</option>
-                            @foreach($tipoImovel as $tipo)
+                            @foreach ($tipoImovel as $tipo)
                                 <option value="{{ $tipo->id }}">{{ $tipo->nome }}</option>
                             @endforeach
                         </select>
@@ -433,7 +425,7 @@ with([
                             class="px-4 py-2 w-full bg-gray-50 rounded-lg border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary"
                             placeholder="Ex: RJ, SP">
                         <datalist id="estados-list">
-                            @foreach($estados as $estado)
+                            @foreach ($estados as $estado)
                                 <option value="{{ $estado }}">{{ $estado }}</option>
                             @endforeach
                         </datalist>
@@ -445,7 +437,7 @@ with([
                             class="px-4 py-2 w-full bg-gray-50 rounded-lg border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary"
                             placeholder="Ex: Brasil">
                         <datalist id="paises-list">
-                            @foreach($paises as $pais)
+                            @foreach ($paises as $pais)
                                 <option value="{{ $pais }}">{{ $pais }}</option>
                             @endforeach
                         </datalist>
@@ -492,7 +484,7 @@ with([
                         <select wire:model.live="garageSpaces"
                             class="px-4 py-2 w-full bg-gray-50 rounded-lg border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary">
                             <option value="">Qualquer</option>
-                            <option value="0">Nenhuma (0)</option>
+                            <option value="0">0 (Nenhuma)</option>
                             <option value="1">1 vaga</option>
                             <option value="2">2 vagas</option>
                             <option value="3">3 vagas</option>
@@ -512,8 +504,7 @@ with([
                         <label class="block mb-2 text-sm font-semibold">CEP</label>
                         <input type="text" wire:model.live.debounce.500ms="cep"
                             class="px-4 py-2 w-full bg-gray-50 rounded-lg border-gray-200 focus:border-primary focus:ring-1 focus:ring-primary"
-                            placeholder="Ex: 25900-000 ou 25900000"
-                            maxlength="9">
+                            placeholder="Ex: 25900-000 ou 25900000" maxlength="9">
                     </div>
 
                     <div>
