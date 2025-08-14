@@ -2,11 +2,10 @@
 
 namespace Database\Factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
-use App\Models\Imovel;
-use App\Models\TipoImovel;
 use App\Models\StatusImovel;
+use App\Models\TipoImovel;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Imovel>
@@ -44,7 +43,7 @@ class ImovelFactory extends Factory
             // Cep deve ser salvo sem hífen ou qualquer outro caracter que não seja um número
             'cep' => str_replace(['-', ' '], '', fake()->postcode()),
             // localização do mapa deve ser um link para o google maps
-            'localizacao_maps' => 'https://www.google.com/maps/place/' . fake()->latitude(-23, -22) . ',' . fake()->longitude(-44, -43),
+            'localizacao_maps' => 'https://www.google.com/maps/place/'.fake()->latitude(-23, -22).','.fake()->longitude(-44, -43),
             'caracteristicas' => [
                 'Piscina' => fake()->randomElement(['Sim', 'Não']),
                 'Churrasqueira' => fake()->randomElement(['Sim', 'Não']),
@@ -74,7 +73,7 @@ class ImovelFactory extends Factory
      */
     public function featured(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'destaque' => true,
         ]);
     }
@@ -86,6 +85,7 @@ class ImovelFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             $availableStatus = StatusImovel::where('nome', 'Disponível')->first();
+
             return [
                 'status_id' => $availableStatus ? $availableStatus->id : StatusImovel::factory(),
             ];
@@ -99,6 +99,7 @@ class ImovelFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             $houseType = TipoImovel::where('nome', 'Casa')->first();
+
             return [
                 'tipo_id' => $houseType ? $houseType->id : TipoImovel::factory(),
                 'terreno' => fake()->numberBetween(200, 1000),
@@ -113,6 +114,7 @@ class ImovelFactory extends Factory
     {
         return $this->state(function (array $attributes) {
             $apartmentType = TipoImovel::where('nome', 'Apartamento')->first();
+
             return [
                 'tipo_id' => $apartmentType ? $apartmentType->id : TipoImovel::factory(),
                 'terreno' => null,

@@ -2,11 +2,10 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
 use App\Models\Imovel;
-use App\Models\TipoImovel;
 use App\Models\StatusImovel;
+use App\Models\TipoImovel;
+use Illuminate\Database\Seeder;
 
 class ImovelSeeder extends Seeder
 {
@@ -273,10 +272,10 @@ class ImovelSeeder extends Seeder
             $tipo = TipoImovel::where('nome', ucfirst($imovel['tipo']))->first();
             $status = StatusImovel::whereRaw('LOWER(nome) = ?', [strtolower($imovel['status'])])->first();
 
-            if (!$tipo) {
+            if (! $tipo) {
                 $tipo = TipoImovel::first();
             }
-            if (!$status) {
+            if (! $status) {
                 $status = StatusImovel::first();
             }
 

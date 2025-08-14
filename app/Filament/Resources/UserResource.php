@@ -4,33 +4,35 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
 use App\Models\User;
-use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Forms\Components\Section;
-use Filament\Forms\Components\FileUpload;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Select;
-use Filament\Resources\Resource;
-use Filament\Tables;
-use Filament\Tables\Table;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Actions\EditAction;
-use Filament\Tables\Actions\DeleteAction;
-use Filament\Tables\Actions\BulkActionGroup;
-use Filament\Tables\Actions\DeleteBulkAction;
-use Filament\Tables\Filters\SelectFilter;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Database\Eloquent\Builder;
 use Filament\Facades\Filament;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Form;
+use Filament\Resources\Resource;
+use Filament\Tables\Actions\BulkActionGroup;
+use Filament\Tables\Actions\DeleteAction;
+use Filament\Tables\Actions\DeleteBulkAction;
+use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Hash;
 
 class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-users';
+
     protected static ?string $navigationLabel = 'Usuários';
+
     protected static ?string $modelLabel = 'Usuário';
+
     protected static ?string $pluralModelLabel = 'Usuários';
+
     protected static ?int $navigationSort = 1;
 
     public static function form(Form $form): Form
@@ -41,7 +43,7 @@ class UserResource extends Resource
                     ->label('Nome')
                     ->required()
                     ->maxLength(255),
-   
+
                 TextInput::make('descricao')
                     ->label('Descrição')
                     ->required()
@@ -68,7 +70,7 @@ class UserResource extends Resource
                         $user = Filament::auth()->user();
 
                         if ($user->role === 'corretor') {
-                            return ['corretor' => 'Corretor']; 
+                            return ['corretor' => 'Corretor'];
                         }
 
                         return [
@@ -82,9 +84,9 @@ class UserResource extends Resource
                 TextInput::make('password')
                     ->label('Senha')
                     ->password()
-                    ->dehydrateStateUsing(fn($state) => filled($state) ? Hash::make($state) : null)
-                    ->dehydrated(fn($state) => filled($state))
-                    ->required(fn(string $context): bool => $context === 'create')
+                    ->dehydrateStateUsing(fn ($state) => filled($state) ? Hash::make($state) : null)
+                    ->dehydrated(fn ($state) => filled($state))
+                    ->required(fn (string $context): bool => $context === 'create')
                     ->maxLength(255),
             ])->columns(2),
 
@@ -115,12 +117,12 @@ class UserResource extends Resource
                 TextColumn::make('role')
                     ->label('Papel')
                     ->badge()
-                    ->color(fn(string $state): string => match ($state) {
+                    ->color(fn (string $state): string => match ($state) {
                         'admin' => 'danger',
                         'corretor' => 'success',
                         default => 'gray',
                     })
-                    ->formatStateUsing(fn(string $state): string => match ($state) {
+                    ->formatStateUsing(fn (string $state): string => match ($state) {
                         'admin' => 'Administrador',
                         'corretor' => 'Corretor',
                         default => ucfirst($state),

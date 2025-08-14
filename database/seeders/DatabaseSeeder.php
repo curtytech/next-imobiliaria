@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create(); // Cria 10 usuários aleatórios
         // User::factory()->admin()->create(); // Cria um usuário admin
         // User::factory(5)->corretor()->create(); // Cria 5 corretores
-        // 
+        //
         // TipoImovel::factory(3)->create(); // Cria 3 tipos aleatórios
         // StatusImovel::factory(2)->create(); // Cria 2 status aleatórios
 

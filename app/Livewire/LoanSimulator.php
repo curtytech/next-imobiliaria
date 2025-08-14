@@ -2,16 +2,16 @@
 
 namespace App\Livewire;
 
-use Livewire\Component;
 use App\Models\Imovel;
+use Livewire\Component;
 
 class LoanSimulator extends Component
 {
     public function getAvailableProperties($maxPrice)
     {
         return Imovel::where('preco', '<=', $maxPrice)
-                    ->where('status', 'disponivel')
-                    ->count();
+            ->where('status', 'disponivel')
+            ->count();
     }
 
     public function render()

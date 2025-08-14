@@ -2,13 +2,15 @@
 
 namespace App\Livewire;
 
-use Livewire\Component;
 use App\Models\TipoImovel;
+use Livewire\Component;
 
 class HeroSearchForm extends Component
 {
     public string $propertyType = 'venda';
+
     public string $propertyKind = '';
+
     public string $location = '';
 
     public function setType($type)
@@ -37,7 +39,7 @@ class HeroSearchForm extends Component
     public function render()
     {
         return view('livewire.hero-search-form', [
-            'tipoImovel' => TipoImovel::all()
+            'tipoImovel' => TipoImovel::all(),
         ]);
     }
 }

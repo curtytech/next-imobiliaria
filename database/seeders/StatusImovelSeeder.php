@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\StatusImovel;
+use Illuminate\Database\Seeder;
 
 class StatusImovelSeeder extends Seeder
 {
@@ -15,7 +15,7 @@ class StatusImovelSeeder extends Seeder
         $tipos = [
             'Disponível',
             'Vendido',
-            'Alugado',            
+            'Alugado',
         ];
 
         foreach ($tipos as $tipo) {

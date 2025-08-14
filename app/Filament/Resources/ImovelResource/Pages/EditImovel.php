@@ -26,6 +26,7 @@ class EditImovel extends EditRecord
                 if (is_array($video) && isset($video['url'])) {
                     return $video;
                 }
+
                 // Se é uma string, converter para formato do Repeater
                 return ['url' => $video];
             })->toArray();
@@ -43,6 +44,7 @@ class EditImovel extends EditRecord
                 if (is_array($video) && isset($video['url'])) {
                     return $video['url'];
                 }
+
                 // Se já é uma string, manter como está
                 return $video;
             })->filter()->toArray();

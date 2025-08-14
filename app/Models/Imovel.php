@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Imovel extends Model
 {
@@ -68,7 +68,7 @@ class Imovel extends Model
 
     public function getPrecoFormatadoAttribute()
     {
-        return 'R$ ' . number_format($this->preco, 2, ',', '.');
+        return 'R$ '.number_format($this->preco, 2, ',', '.');
     }
 
     public function getEnderecoCompletoAttribute()
@@ -78,28 +78,31 @@ class Imovel extends Model
 
     public function getImagemPrincipalAttribute()
     {
-        if (!empty($this->fotos) && isset($this->fotos[0])) {
+        if (! empty($this->fotos) && isset($this->fotos[0])) {
             $foto = $this->fotos[0];
             // Se a foto não começar com http, assumir que é um caminho local
-            if (!str_starts_with($foto, 'http')) {
-                return asset('storage/' . $foto);
+            if (! str_starts_with($foto, 'http')) {
+                return asset('storage/'.$foto);
             }
+
             return $foto;
         }
+
         return 'https://via.placeholder.com/400x250.png?text=Sem+Imagem';
     }
 
     public function getFotosProcessadasAttribute()
     {
-        if (!$this->fotos) {
+        if (! $this->fotos) {
             return [];
         }
 
         return collect($this->fotos)->map(function ($foto) {
             // Se a foto não começar com http, assumir que é um caminho local
-            if (!str_starts_with($foto, 'http')) {
-                return asset('storage/' . $foto);
+            if (! str_starts_with($foto, 'http')) {
+                return asset('storage/'.$foto);
             }
+
             return $foto;
         })->toArray();
     }
@@ -128,7 +131,7 @@ class Imovel extends Model
 
     public function getVideoIdsAttribute()
     {
-        if (!$this->videos) {
+        if (! $this->videos) {
             return [];
         }
 
@@ -143,9 +146,9 @@ class Imovel extends Model
         if (is_array($url)) {
             $url = $url['url'] ?? '';
         }
-        
+
         // Garantir que $url é uma string
-        if (!is_string($url) || empty($url)) {
+        if (! is_string($url) || empty($url)) {
             return null;
         }
 

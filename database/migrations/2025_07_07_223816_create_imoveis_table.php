@@ -35,7 +35,7 @@ return new class extends Migration
             $table->json('caracteristicas')->nullable(); // características extras
             $table->json('fotos')->nullable(); // URLs das fotos
             $table->json('videos')->nullable(); // URLs dos vídeos do YouTube
-            $table->boolean('destaque')->default(false);            
+            $table->boolean('destaque')->default(false);
             $table->string('localizacao_maps')->nullable();
             $table->decimal('area_util', 8, 2)->nullable();
             $table->decimal('terreno', 8, 2)->nullable();

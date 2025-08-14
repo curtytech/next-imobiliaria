@@ -3,30 +3,25 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ImovelResource\Pages;
-use App\Filament\Resources\ImovelResource\RelationManagers;
 use App\Models\Imovel;
+use Filament\Facades\Filament;
 use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
-use Filament\Tables;
-use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Filament\Forms\Components\Section;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
+use Filament\Forms\Form;
+use Filament\Resources\Resource;
+use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Filters\TernaryFilter;
-use Filament\Facades\Filament;
-
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 
 class ImovelResource extends Resource
 {
@@ -69,7 +64,7 @@ class ImovelResource extends Resource
                                 'h4',
                                 'undo',
                                 'redo',
-                                'removeFormat'
+                                'removeFormat',
                             ])
                             ->columnSpanFull(),
 
@@ -117,7 +112,6 @@ class ImovelResource extends Resource
                             ->label('Preço de Condomínio')
                             ->numeric()
                             ->prefix('R$'),
-
 
                     ])->columns(2),
 
@@ -250,7 +244,6 @@ class ImovelResource extends Resource
                             ])
                             ->required(),
 
-
                         TextInput::make('cep')
                             ->label('CEP')
                             ->maxLength(8)
@@ -303,12 +296,10 @@ class ImovelResource extends Resource
                             ->addActionLabel('Adicionar Vídeo')
                             ->reorderable(false)
                             ->collapsible()
-                            ->itemLabel(fn(array $state): ?string => $state['url'] ?? null)
+                            ->itemLabel(fn (array $state): ?string => $state['url'] ?? null)
                             ->maxItems(5)
                             ->helperText('Adicione até 5 links de vídeos do YouTube para mostrar o imóvel'),
                     ]),
-
-
 
             ]);
     }
@@ -347,7 +338,7 @@ class ImovelResource extends Resource
                 TextColumn::make('statusImovel.nome')
                     ->label('Status')
                     ->badge()
-                    ->color(fn($record) => match (strtolower($record->statusImovel->nome ?? '')) {
+                    ->color(fn ($record) => match (strtolower($record->statusImovel->nome ?? '')) {
                         'disponivel' => 'success',
                         'vendido' => 'danger',
                         'alugado' => 'warning',
