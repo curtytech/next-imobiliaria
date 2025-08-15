@@ -101,18 +101,7 @@ $hasMultipleImages = computed(function () {
 });
 
 $propertyTypeLabel = computed(function () {
-    if (!$this->imovel) return '';
-
-    return match ($this->imovel->tipo) {
-        'casa' => 'Casa',
-        'apartamento' => 'Apartamento',
-        'terreno' => 'Terreno',
-        'comercial' => 'Comercial',
-        'loja' => 'Loja',
-        'galpao' => 'Galpão',
-        'sala' => 'Sala',
-        default => ucfirst($this->imovel->tipo),
-    };
+    return $this->imovel?->tipoImovel?->nome ?? '';
 });
 
 ?>

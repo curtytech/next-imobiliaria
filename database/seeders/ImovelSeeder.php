@@ -49,6 +49,8 @@ class ImovelSeeder extends Seeder
                     'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
                 ],
                 'destaque' => true,
+                'preco_iptu' => 1200.00,
+                'preco_condominio' => 600.00,
             ],
             [
                 'titulo' => 'Apartamento 2 Quartos - Centro',
@@ -82,6 +84,8 @@ class ImovelSeeder extends Seeder
                     'https://www.youtube.com/watch?v=jNQXAC9IVRw',
                 ],
                 'destaque' => false,
+                'preco_iptu' => 800.00,
+                'preco_condominio' => 400.00,
             ],
             [
                 'titulo' => 'Terreno Residencial - Piabetá',
@@ -113,6 +117,8 @@ class ImovelSeeder extends Seeder
                     'https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=800&auto=format&fit=crop',
                 ],
                 'destaque' => false,
+                'preco_iptu' => 500.00,
+                'preco_condominio' => 0.00,
             ],
             [
                 'titulo' => 'Sala Comercial - Centro Empresarial',
@@ -144,6 +150,8 @@ class ImovelSeeder extends Seeder
                     'https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=800&auto=format&fit=crop',
                 ],
                 'destaque' => true,
+                'preco_iptu' => 1500.00,
+                'preco_condominio' => 300.00,
             ],
             [
                 'titulo' => 'Casa Térrea - Vila Nova',
@@ -173,6 +181,8 @@ class ImovelSeeder extends Seeder
                     'https://images.unsplash.com/photo-1568605114967-8130f3a36994?q=80&w=800&auto=format&fit=crop',
                 ],
                 'destaque' => false,
+                'preco_iptu' => 600.00,
+                'preco_condominio' => 200.00,
             ],
             [
                 'titulo' => 'Apartamento 3 Quartos - Jardim Europa',
@@ -203,6 +213,8 @@ class ImovelSeeder extends Seeder
                     'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?q=80&w=800&auto=format&fit=crop',
                 ],
                 'destaque' => false,
+                'preco_iptu' => 900.00,
+                'preco_condominio' => 500.00,
             ],
             [
                 'titulo' => 'Casa de Alto Padrão - Santo Aleixo',
@@ -235,6 +247,8 @@ class ImovelSeeder extends Seeder
                     'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=800&auto=format&fit=crop',
                 ],
                 'destaque' => true,
+                'preco_iptu' => 2000.00,
+                'preco_condominio' => 800.00,
             ],
             [
                 'titulo' => 'Loja Comercial - Centro',
@@ -265,6 +279,8 @@ class ImovelSeeder extends Seeder
                     'https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=800&auto=format&fit=crop',
                 ],
                 'destaque' => false,
+                'preco_iptu' => 700.00,
+                'preco_condominio' => 300.00,
             ],
         ];
 

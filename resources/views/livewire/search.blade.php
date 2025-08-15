@@ -72,30 +72,30 @@ mount(function () {
 
 $buildQuery = function () {
     try {
-        $query = Imovel::with(['tipoImovel', 'statusImovel', 'corretor'])->whereHas('statusImovel', function ($q) {
-            $q->where('nome', 'Disponível');
-        });
+        $query = Imovel::with(['tipoImovel', 'statusImovel', 'corretor'])
+            ->whereHas('statusImovel', fn($q) => $q->where('nome', 'Disponível'));
 
         // Location filter (city, neighborhood, address)
         if (!empty($this->location)) {
             $location = trim($this->location);
             $query->where(function ($q) use ($location) {
-                $q->where('cidade', 'like', '%' . $location . '%')
-                    ->orWhere('bairro', 'like', '%' . $location . '%')
-                    ->orWhere('endereco', 'like', '%' . $location . '%');
+                $location = trim($location);
+                $q->where('cidade', 'like', $location . '%')
+                    ->orWhere('bairro', 'like', $location . '%')
+                    ->orWhere('endereco', 'like', $location . '%');
             });
         }
 
         // Neighborhood filter
         if (!empty($this->neighborhood)) {
-            $query->where('bairro', 'like', '%' . trim($this->neighborhood) . '%');
+            $query->where('bairro', 'like', trim($this->neighborhood) . '%');
         }
 
         // CEP filter
         if (!empty($this->cep)) {
             $cepLimpo = preg_replace('/[^0-9]/', '', trim($this->cep));
             $query->where(function ($q) use ($cepLimpo) {
-                $q->where('cep', 'like', '%' . $cepLimpo . '%')->orWhereRaw('REPLACE(cep, "-", "") LIKE ?', ['%' . $cepLimpo . '%']);
+                $q->where('cep', 'like', $cepLimpo . '%')->orWhereRaw('REPLACE(cep, "-", "") LIKE ?', [$cepLimpo . '%']);
             });
         }
 
@@ -111,27 +111,27 @@ $buildQuery = function () {
 
         // Country filter
         if (!empty($this->country)) {
-            $query->where('pais', 'like', '%' . trim($this->country) . '%');
+            $query->where('pais', 'like', trim($this->country) . '%');
         }
 
         // State filter
         if (!empty($this->state)) {
-            $query->where('estado', 'like', '%' . trim($this->state) . '%');
+            $query->where('estado', 'like', trim($this->state) . '%');
         }
 
         // Street filter
         if (!empty($this->street)) {
-            $query->where('endereco', 'like', '%' . trim($this->street) . '%');
+            $query->where('endereco', 'like', trim($this->street) . '%');
         }
 
         // Title filter
         if (!empty($this->title)) {
-            $query->where('titulo', 'like', '%' . trim($this->title) . '%');
+            $query->where('titulo', 'like', trim($this->title) . '%');
         }
 
         // Address filter (endereco + numero)
         if (!empty($this->address)) {
-            $query->where('endereco', 'like', '%' . trim($this->address) . '%');
+            $query->where('endereco', 'like', trim($this->address) . '%');
         }
 
         // Featured filter
@@ -176,7 +176,9 @@ $buildQuery = function () {
             if ($this->bedrooms == 5) {
                 $query->where('quartos', '>=', 5);
             } elseif ($this->bedrooms == 0) {
-                $query->where('quartos', '=', 0);
+                $query->where(function ($q) {
+                    $q->where('quartos', '=', 0)->orWhereNull('quartos');
+                });
             } else {
                 $query->where('quartos', '=', (int) $this->bedrooms);
             }
@@ -187,7 +189,9 @@ $buildQuery = function () {
             if ($this->bathrooms == 5) {
                 $query->where('banheiros', '>=', 5);
             } elseif ($this->bathrooms == 0) {
-                $query->where('banheiros', '=', 0);
+                $query->where(function ($q) {
+                    $q->where('banheiros', '=', 0)->orWhereNull('banheiros');
+                });
             } else {
                 $query->where('banheiros', '=', (int) $this->bathrooms);
             }
@@ -198,7 +202,9 @@ $buildQuery = function () {
             if ($this->garageSpaces == 5) {
                 $query->where('vagas_garagem', '>=', 5);
             } elseif ($this->garageSpaces == 0) {
-                $query->where('vagas_garagem', '=', 0);
+                $query->where(function ($q) {
+                    $q->where('vagas_garagem', '=', 0)->orWhereNull('vagas_garagem');
+                });
             } else {
                 $query->where('vagas_garagem', '=', (int) $this->garageSpaces);
             }
@@ -555,7 +561,7 @@ with([
 
                 <div class="flex flex-col gap-4 mb-6 md:flex-row md:items-center md:justify-between">
                     <div class="text-sm text-gray-700">
-                        {{ $propertiesFound }} imóveis encontrados
+                        {{ $this->properties->total() }} imóveis encontrados
                     </div>
                     <div class="flex gap-2 items-center">
                         <span class="text-sm text-gray-500">Exibir:</span>
