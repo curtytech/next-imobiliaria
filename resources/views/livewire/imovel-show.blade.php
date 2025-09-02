@@ -218,7 +218,7 @@ $propertyTypeLabel = computed(function () {
                     <div class="bg-white rounded-xl shadow p-6 mb-8">
                         <h2 class="text-xl font-bold text-gray-900 mb-4">Descrição</h2>
                         <div class="prose prose-gray max-w-none">
-                            <p class="text-gray-700 leading-relaxed">{{ $imovel->descricao }}</p>
+                            <div class="text-gray-700 leading-relaxed">{!! $imovel->descricao !!}</div>
                         </div>
                     </div>
 

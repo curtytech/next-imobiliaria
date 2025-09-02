@@ -172,7 +172,7 @@ state([
                 <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
                     @forelse ($corretores as $corretor)
                     <div class="p-8 text-center bg-white rounded-xl shadow-lg transition-shadow duration-300 hover:shadow-xl group">
-                        <img src="{{ $corretor->foto ?? 'https://placehold.co/128x128/EFEFEF/777777?text=Foto' }}"
+                        <img src="{{ 'storage/' . $corretor->foto ?? 'https://placehold.co/128x128/EFEFEF/777777?text=Foto' }}"
                             alt="Corretor {{ $corretor->name }}"
                             class="mx-auto mb-4 w-32 h-32 rounded-full border-4 border-white transition-colors duration-300 group-hover:border-primary">
                         <h3 class="text-xl font-bold text-gray-800">{{ $corretor->name }} </h3>
@@ -191,7 +191,6 @@ state([
                     @endforelse
                 </div>
                 <!-- Carousel Navigation -->
-                {{-- <button
                 {{-- <button
                     class="absolute left-0 top-1/2 p-2 bg-white rounded-full border border-gray-300 shadow transition -translate-y-1/2 hover:bg-primary hover:text-white lg:-left-12"
                     aria-label="Anterior"><i data-lucide="arrow-left"></i></button>
