@@ -13,21 +13,21 @@ window.initGlide = (selector, options = {}) => {
 };
 
 // Loan Simulator Alpine.js component
-window.loanSimulator = () => ({
-	propertyValue: 300000,
-	downPayment: 50000,
-	loanTerm: 20,
-	interestRate: 0.09,
-	get monthlyPayment() {
-		const principal = this.propertyValue - this.downPayment;
-		const months = this.loanTerm * 12;
-		const monthlyRate = this.interestRate / 12;
-		return (principal * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -months));
-	},
-	formatCurrency(value) {
-		return value.toLocaleString("pt-BR", {
-			style: "currency",
-			currency: "BRL",
-		});
-	},
-});
+// window.loanSimulator = () => ({
+// 	propertyValue: 300000,
+// 	downPayment: 50000,
+// 	loanTerm: 20,
+// 	interestRate: 0.09,
+// 	get monthlyPayment() {
+// 		const principal = this.propertyValue - this.downPayment;
+// 		const months = this.loanTerm * 12;
+// 		const monthlyRate = this.interestRate / 12;
+// 		return (principal * monthlyRate) / (1 - Math.pow(1 + monthlyRate, -months));
+// 	},
+// 	formatCurrency(value) {
+// 		return value.toLocaleString("pt-BR", {
+// 			style: "currency",
+// 			currency: "BRL",
+// 		});
+// 	},
+// });
